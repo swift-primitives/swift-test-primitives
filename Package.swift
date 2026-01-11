@@ -12,17 +12,12 @@ let package = Package(
         .visionOS(.v26),
     ],
     products: [
-        // Tier 1 primitive libraries - stdlib + identity-primitives ONLY
         .library(name: "Test Primitives", targets: ["Test_Primitives"]),
     ],
     dependencies: [
-        // ONLY swift-identity-primitives for Tagged<>
-        // NO swift-tests, NO swift-syntax
         .package(path: "../swift-identity-primitives"),
     ],
     targets: [
-        // Current target with Bool CaseIterable extensions
-        // Will be expanded with Tier 1 primitive types
         .target(
             name: "Test_Primitives",
             dependencies: [
