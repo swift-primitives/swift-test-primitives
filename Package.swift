@@ -15,13 +15,15 @@ let package = Package(
         .library(name: "Test Primitives", targets: ["Test_Primitives"]),
     ],
     dependencies: [
-        .package(path: "../swift-identity-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-identity-primitives.git", from: "0.0.1"),
+        .package(url: "https://github.com/swift-primitives/swift-async-primitives.git", from: "0.0.1"),
     ],
     targets: [
         .target(
             name: "Test_Primitives",
             dependencies: [
                 .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+                .product(name: "Async Primitives", package: "swift-async-primitives"),
             ],
             path: "Sources/Test Primitives"
         ),
