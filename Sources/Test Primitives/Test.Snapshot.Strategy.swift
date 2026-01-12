@@ -2,8 +2,10 @@
 //  Test.Snapshot.Strategy.swift
 //  swift-test-primitives
 //
-//  Snapshotting strategy type.
+//  Snapshot strategy type.
 //
+
+public import Async_Primitives
 
 extension Test.Snapshot {
     /// A strategy for snapshotting values into a diffable format.
@@ -46,79 +48,86 @@ extension Test.Snapshot {
     ///             pathExtension: "html",
     ///             diffing: .lines,
     ///             asyncSnapshot: { webView in
-    ///                 await webView.getHTML()
+    ///                 Async.Callback { callback in
+    ///                     webView.getHTML { html in
+    ///                         callback(html)
+    ///                     }
+    ///                 }
     ///             }
     ///         )
     ///     }
     /// }
     /// ```
-    public struct Strategy<Value, Format>: Sendable {
+    public struct Strategy<Value, Format>: Sendable where Value: Sendable, Format: Sendable {
         /// File extension for snapshot files (e.g., "txt", "json", "png").
-        public let pathExtension: String
+        ///
+        /// Set to `nil` to use no extension.
+        public var pathExtension: String?
 
         /// How to serialize, deserialize, and compare the format.
-        public let diffing: Diffing<Format>
+        public var diffing: Diffing<Format>
 
-        /// Synchronous snapshot capture function.
+        /// The async snapshot capture function.
         ///
-        /// Either this or ``asyncSnapshot`` must be non-nil.
-        public let snapshot: (@Sendable (Value) -> Format)?
+        /// Returns an `Async.Callback` that produces the format when run.
+        /// This allows both synchronous and asynchronous capture.
+        public var snapshot: @Sendable (Value) -> Async.Callback<Format>
 
-        /// Asynchronous snapshot capture function.
+        /// The sync snapshot capture function, if available.
         ///
-        /// Used for values requiring async capture (rendering, network, etc.).
-        /// Either this or ``snapshot`` must be non-nil.
-        public let asyncSnapshot: (@Sendable (Value) async -> Format)?
+        /// Non-nil when the strategy was created with a synchronous capture function.
+        /// Used by sync `assertSnapshot` to avoid blocking.
+        public var syncSnapshot: (@Sendable (Value) -> Format)?
 
         // MARK: - Initializers
 
-        /// Creates a synchronous strategy.
+        /// Creates a strategy with async capture.
         ///
         /// - Parameters:
         ///   - pathExtension: File extension for snapshot files.
         ///   - diffing: Serialization and comparison logic.
-        ///   - snapshot: Converts value to format synchronously.
+        ///   - asyncSnapshot: Function that returns an `Async.Callback` to capture the snapshot.
         public init(
-            pathExtension: String,
+            pathExtension: String?,
             diffing: Diffing<Format>,
-            snapshot: @escaping @Sendable (Value) -> Format
+            asyncSnapshot: @escaping @Sendable (_ value: Value) -> Async.Callback<Format>
         ) {
             self.pathExtension = pathExtension
             self.diffing = diffing
-            self.snapshot = snapshot
-            self.asyncSnapshot = nil
+            self.snapshot = asyncSnapshot
+            self.syncSnapshot = nil
         }
 
-        /// Creates an asynchronous strategy.
+        /// Creates a strategy with synchronous capture.
         ///
         /// - Parameters:
         ///   - pathExtension: File extension for snapshot files.
         ///   - diffing: Serialization and comparison logic.
-        ///   - asyncSnapshot: Converts value to format asynchronously.
+        ///   - snapshot: Synchronous function that captures the snapshot.
         public init(
-            pathExtension: String,
+            pathExtension: String?,
             diffing: Diffing<Format>,
-            asyncSnapshot: @escaping @Sendable (Value) async -> Format
+            snapshot: @escaping @Sendable (_ value: Value) -> Format
         ) {
             self.pathExtension = pathExtension
             self.diffing = diffing
-            self.snapshot = nil
-            self.asyncSnapshot = asyncSnapshot
+            self.syncSnapshot = snapshot
+            self.snapshot = { value in Async.Callback(value: snapshot(value)) }
         }
 
         // MARK: - Internal Initializer
 
         /// Creates a strategy with both sync and async functions (internal use).
         init(
-            pathExtension: String,
+            pathExtension: String?,
             diffing: Diffing<Format>,
-            snapshot: (@Sendable (Value) -> Format)?,
-            asyncSnapshot: (@Sendable (Value) async -> Format)?
+            syncSnapshot: (@Sendable (Value) -> Format)?,
+            asyncSnapshot: @escaping @Sendable (Value) -> Async.Callback<Format>
         ) {
             self.pathExtension = pathExtension
             self.diffing = diffing
-            self.snapshot = snapshot
-            self.asyncSnapshot = asyncSnapshot
+            self.syncSnapshot = syncSnapshot
+            self.snapshot = asyncSnapshot
         }
 
         // MARK: - Composition
@@ -127,8 +136,6 @@ extension Test.Snapshot {
         ///
         /// "Pulls back" along a function `(NewValue) -> Value`, creating a strategy
         /// that can snapshot `NewValue` by first transforming to `Value`.
-        ///
-        /// There's also an async overload for async transformations.
         ///
         /// ## Example
         ///
@@ -141,95 +148,79 @@ extension Test.Snapshot {
         ///
         /// - Parameter transform: Function to transform new value to original value type.
         /// - Returns: A strategy for the new value type.
-        public func pullback<NewValue>(
-            _ transform: @escaping @Sendable (NewValue) -> Value
+        public func pullback<NewValue: Sendable>(
+            _ transform: @escaping @Sendable (_ otherValue: NewValue) -> Value
         ) -> Test.Snapshot.Strategy<NewValue, Format> {
-            var newSnapshot: (@Sendable (NewValue) -> Format)?
-            var newAsyncSnapshot: (@Sendable (NewValue) async -> Format)?
+            let capturedSnapshot = self.snapshot
+            let capturedSyncSnapshot = self.syncSnapshot
 
-            if let snap = snapshot {
-                newSnapshot = { newValue in snap(transform(newValue)) }
-            }
-            if let asyncSnap = asyncSnapshot {
-                newAsyncSnapshot = { newValue in await asyncSnap(transform(newValue)) }
+            var newSyncSnapshot: (@Sendable (NewValue) -> Format)?
+            if let sync = capturedSyncSnapshot {
+                newSyncSnapshot = { newValue in sync(transform(newValue)) }
             }
 
             return Test.Snapshot.Strategy<NewValue, Format>(
                 pathExtension: pathExtension,
                 diffing: diffing,
-                snapshot: newSnapshot,
-                asyncSnapshot: newAsyncSnapshot
+                syncSnapshot: newSyncSnapshot,
+                asyncSnapshot: { newValue in
+                    capturedSnapshot(transform(newValue))
+                }
             )
         }
 
         /// Transforms this strategy with an async transformation.
         ///
-        /// Similar to the sync ``pullback(_:)`` but the transformation is async.
-        /// The resulting strategy will always be async.
+        /// Similar to the sync ``pullback(_:)`` but the transformation returns
+        /// an `Async.Callback`. The resulting strategy is always async-only.
         ///
-        /// - Parameter transform: Async function to transform new value to original value type.
+        /// - Parameter transform: Function that returns an `Async.Callback` producing the original value type.
         /// - Returns: An async strategy for the new value type.
-        public func pullback<NewValue>(
-            _ transform: @escaping @Sendable (NewValue) async -> Value
+        public func asyncPullback<NewValue: Sendable>(
+            _ transform: @escaping @Sendable (_ otherValue: NewValue) -> Async.Callback<Value>
         ) -> Test.Snapshot.Strategy<NewValue, Format> {
             let capturedSnapshot = self.snapshot
-            let capturedAsyncSnapshot = self.asyncSnapshot
-            let newAsyncSnapshot: @Sendable (NewValue) async -> Format = { newValue in
-                let value = await transform(newValue)
-                if let snap = capturedSnapshot {
-                    return snap(value)
-                } else if let asyncSnap = capturedAsyncSnapshot {
-                    return await asyncSnap(value)
-                } else {
-                    fatalError("Strategy has neither sync nor async snapshot function")
-                }
-            }
             return Test.Snapshot.Strategy<NewValue, Format>(
                 pathExtension: pathExtension,
                 diffing: diffing,
-                snapshot: nil,
-                asyncSnapshot: newAsyncSnapshot
+                asyncSnapshot: { newValue in
+                    Async.Callback { callback in
+                        transform(newValue).run { value in
+                            capturedSnapshot(value).run(callback)
+                        }
+                    }
+                }
             )
         }
 
         // MARK: - Capture
 
-        /// Captures a snapshot of the value.
+        /// Captures a snapshot using Swift concurrency.
         ///
-        /// Uses the sync function if available, otherwise awaits the async function.
+        /// Awaits the `Async.Callback` result.
         ///
         /// - Parameter value: The value to snapshot.
-        /// - Returns: The snapshotted format.
+        /// - Returns: The captured format.
         public func capture(_ value: Value) async -> Format {
-            if let snap = snapshot {
-                return snap(value)
-            } else if let asyncSnap = asyncSnapshot {
-                return await asyncSnap(value)
-            } else {
-                fatalError("Strategy has neither sync nor async snapshot function")
-            }
-        }
-
-        /// Captures a snapshot synchronously.
-        ///
-        /// - Precondition: The strategy must have a sync snapshot function.
-        /// - Parameter value: The value to snapshot.
-        /// - Returns: The snapshotted format.
-        public func captureSync(_ value: Value) -> Format {
-            guard let snap = snapshot else {
-                fatalError("Strategy does not have a sync snapshot function. Use capture(_:) async instead.")
-            }
-            return snap(value)
+            await snapshot(value).value
         }
 
         /// Whether this strategy supports synchronous capture.
         public var isSynchronous: Bool {
-            snapshot != nil
+            syncSnapshot != nil
         }
     }
 }
 
-// MARK: - SimplySnapshotting (Value == Format)
+// MARK: - SimplyStrategy (Value == Format)
+
+extension Test.Snapshot {
+    /// A strategy where `Value` and `Format` are the same type.
+    ///
+    /// This is convenient for types that are their own snapshot format,
+    /// such as `String` or `[UInt8]`.
+    public typealias SimplyStrategy<Format: Sendable> = Strategy<Format, Format>
+}
 
 extension Test.Snapshot.Strategy where Value == Format {
     /// Creates a strategy where the value type equals the format type.
@@ -239,7 +230,7 @@ extension Test.Snapshot.Strategy where Value == Format {
     /// - Parameters:
     ///   - pathExtension: File extension for snapshot files.
     ///   - diffing: Serialization and comparison logic.
-    public init(pathExtension: String, diffing: Test.Snapshot.Diffing<Format>) {
+    public init(pathExtension: String?, diffing: Test.Snapshot.Diffing<Format>) {
         self.init(
             pathExtension: pathExtension,
             diffing: diffing,

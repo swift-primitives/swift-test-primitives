@@ -27,11 +27,11 @@ extension Test.Snapshot.Strategy where Format == String {
     /// }
     ///
     /// let user = User(name: "Alice", age: 30)
-    /// try expectSnapshot(of: user, as: .description())
+    /// assertSnapshot(of: user, as: .description())
     /// ```
     ///
     /// - Returns: A strategy that snapshots any value via `String(describing:)`.
-    public static func description<V>() -> Test.Snapshot.Strategy<V, String> {
+    public static func description<V: Sendable>() -> Test.Snapshot.Strategy<V, String> {
         Test.Snapshot.Strategy<String, String>.lines.pullback { String(describing: $0) }
     }
 
@@ -41,7 +41,7 @@ extension Test.Snapshot.Strategy where Format == String {
     /// conforming to `CustomStringConvertible`.
     ///
     /// - Returns: A strategy that uses the value's `description` property.
-    public static func customDescription<V: CustomStringConvertible>() -> Test.Snapshot.Strategy<V, String> {
+    public static func customDescription<V: CustomStringConvertible & Sendable>() -> Test.Snapshot.Strategy<V, String> {
         Test.Snapshot.Strategy<String, String>.lines.pullback { $0.description }
     }
 
@@ -51,7 +51,31 @@ extension Test.Snapshot.Strategy where Format == String {
     /// provides more detail than `description`.
     ///
     /// - Returns: A strategy that uses the value's `debugDescription` property.
-    public static func debugDescription<V: CustomDebugStringConvertible>() -> Test.Snapshot.Strategy<V, String> {
+    public static func debugDescription<V: CustomDebugStringConvertible & Sendable>() -> Test.Snapshot.Strategy<V, String> {
         Test.Snapshot.Strategy<String, String>.lines.pullback { $0.debugDescription }
+    }
+}
+
+// MARK: - Any Strategy
+
+extension Test.Snapshot.Strategy where Value: Sendable, Format == String {
+    /// Creates a strategy that dumps the value's structure.
+    ///
+    /// Uses Swift's `dump()` function to produce a detailed structural
+    /// representation of the value. Useful for complex nested types.
+    ///
+    /// File extension: `.txt`
+    ///
+    /// - Returns: A strategy that dumps the value's structure.
+    public static var dump: Self {
+        Test.Snapshot.Strategy(
+            pathExtension: "txt",
+            diffing: .lines,
+            snapshot: { value in
+                var output = ""
+                Swift.dump(value, to: &output)
+                return output
+            }
+        )
     }
 }
