@@ -48,9 +48,11 @@ extension Test.Snapshot {
     ///             pathExtension: "html",
     ///             diffing: .lines,
     ///             asyncSnapshot: { webView in
-    ///                 Async.Callback { callback in
-    ///                     webView.getHTML { html in
-    ///                         callback(html)
+    ///                 Async.Callback {
+    ///                     await withCheckedContinuation { continuation in
+    ///                         webView.getHTML { html in
+    ///                             continuation.resume(returning: html)
+    ///                         }
     ///                     }
     ///                 }
     ///             }
@@ -69,7 +71,7 @@ extension Test.Snapshot {
 
         /// The async snapshot capture function.
         ///
-        /// Returns an `Async.Callback` that produces the format when run.
+        /// Returns an `Async.Callback` that produces the format when called.
         /// This allows both synchronous and asynchronous capture.
         public var snapshot: @Sendable (Value) -> Async.Callback<Format>
 
@@ -172,7 +174,7 @@ extension Test.Snapshot {
         /// Transforms this strategy with an async transformation.
         ///
         /// Similar to the sync ``pullback(_:)`` but the transformation returns
-        /// an `Async.Callback`. The resulting strategy is always async-only.
+        /// an `Async.Callback` that is awaited. The resulting strategy is always async-only.
         ///
         /// - Parameter transform: Function that returns an `Async.Callback` producing the original value type.
         /// - Returns: An async strategy for the new value type.
@@ -184,10 +186,8 @@ extension Test.Snapshot {
                 pathExtension: pathExtension,
                 diffing: diffing,
                 asyncSnapshot: { newValue in
-                    Async.Callback { callback in
-                        transform(newValue).run { value in
-                            capturedSnapshot(value).run(callback)
-                        }
+                    Async.Callback {
+                        await capturedSnapshot(await transform(newValue)())()
                     }
                 }
             )
@@ -197,12 +197,12 @@ extension Test.Snapshot {
 
         /// Captures a snapshot using Swift concurrency.
         ///
-        /// Awaits the `Async.Callback` result.
+        /// Calls the `Async.Callback` and awaits the result.
         ///
         /// - Parameter value: The value to snapshot.
         /// - Returns: The captured format.
         public func capture(_ value: Value) async -> Format {
-            await snapshot(value).value
+            await snapshot(value)()
         }
 
         /// Whether this strategy supports synchronous capture.
