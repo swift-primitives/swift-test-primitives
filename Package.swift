@@ -12,7 +12,7 @@ let package = Package(
         .visionOS(.v26),
     ],
     products: [
-        .library(name: "Test Primitives", targets: ["Test_Primitives"]),
+        .library(name: "Test Primitives", targets: ["Test Primitives"]),
     ],
     dependencies: [
         .package(path: "../swift-identity-primitives"),
@@ -20,12 +20,18 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Test_Primitives",
+            name: "Test Primitives",
             dependencies: [
                 .product(name: "Identity Primitives", package: "swift-identity-primitives"),
                 .product(name: "Async Primitives", package: "swift-async-primitives"),
             ],
             path: "Sources/Test Primitives"
+        ),
+        .testTarget(
+            name: "Test Primitives Tests",
+            dependencies: [
+                "Test Primitives",
+            ]
         ),
     ],
     swiftLanguageModes: [.v6]
@@ -37,6 +43,7 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableExperimentalFeature("Lifetimes"),
         .enableExperimentalFeature("SuppressedAssociatedTypes"),
         .enableExperimentalFeature("SuppressedAssociatedTypesWithDefaults"),
