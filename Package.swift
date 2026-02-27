@@ -31,6 +31,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../swift-identity-primitives"),
+        .package(path: "../swift-source-primitives"),
         .package(path: "../swift-async-primitives"),
         .package(path: "../swift-sequence-primitives"),
     ],
@@ -40,6 +41,7 @@ let package = Package(
             name: "Test Primitives Core",
             dependencies: [
                 .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+                .product(name: "Source Primitives", package: "swift-source-primitives"),
             ]
         ),
 

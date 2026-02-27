@@ -31,7 +31,7 @@ extension Test {
         public let kind: Kind
 
         /// Where this issue occurred in source code.
-        public let sourceLocation: Test.Source.Location?
+        public let sourceLocation: Source.Location?
 
         /// Whether this is a known issue (won't cause test failure).
         public let isKnown: Bool
@@ -48,7 +48,7 @@ extension Test {
         ///   - context: Additional context.
         public init(
             kind: Kind,
-            sourceLocation: Test.Source.Location? = nil,
+            sourceLocation: Source.Location? = nil,
             isKnown: Bool = false,
             context: Test.Text? = nil
         ) {

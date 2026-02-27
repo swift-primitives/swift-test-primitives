@@ -15,7 +15,7 @@ struct TestIDTests {
 extension TestIDTests.Unit {
     @Test
     func `init with suite stores all properties`() {
-        let location = SUT.Source.Location.stub()
+        let location = Source.Location.stub()
         let id = SUT.ID(
             module: "MyModule", suite: "MySuite",
             name: "testFoo", sourceLocation: location

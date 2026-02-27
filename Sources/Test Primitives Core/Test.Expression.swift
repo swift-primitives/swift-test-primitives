@@ -29,7 +29,7 @@ extension Test {
         public let sourceCode: String
 
         /// The source location where this expression appears.
-        public let sourceLocation: Test.Source.Location
+        public let sourceLocation: Source.Location
 
         /// Captured subexpression values.
         public let values: [Value]
@@ -44,7 +44,7 @@ extension Test {
         public init(
             id: ID,
             sourceCode: String,
-            sourceLocation: Test.Source.Location,
+            sourceLocation: Source.Location,
             values: [Value] = []
         ) {
             self.id = id

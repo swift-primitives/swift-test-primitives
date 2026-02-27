@@ -15,7 +15,7 @@ struct TestExpressionTests {
 extension TestExpressionTests.Unit {
     @Test
     func `init stores all properties`() {
-        let loc = SUT.Source.Location.stub()
+        let loc = Source.Location.stub()
         let expr = SUT.Expression(
             id: 1, sourceCode: "x == 42",
             sourceLocation: loc, values: []

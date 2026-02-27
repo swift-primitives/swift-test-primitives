@@ -69,7 +69,7 @@ extension TestTraitTests.Unit {
 
     @Test
     func `sourceLocation stores when provided`() {
-        let loc = SUT.Source.Location.stub(line: 42)
+        let loc = Source.Location.stub(line: 42)
         let trait = SUT.Trait(kind: .serialized, sourceLocation: loc)
         #expect(trait.sourceLocation == loc)
     }

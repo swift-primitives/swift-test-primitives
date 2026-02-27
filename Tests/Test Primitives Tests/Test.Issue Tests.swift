@@ -23,7 +23,7 @@ extension TestIssueTests.Unit {
 
     @Test
     func `init with all parameters`() {
-        let loc = SUT.Source.Location.stub(line: 42)
+        let loc = Source.Location.stub(line: 42)
         let issue = SUT.Issue(
             kind: .unconditional("msg"),
             sourceLocation: loc,

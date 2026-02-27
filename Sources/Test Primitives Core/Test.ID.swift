@@ -46,7 +46,7 @@ extension Test {
         public let name: String
 
         /// The source location where this test is defined.
-        public let sourceLocation: Test.Source.Location
+        public let sourceLocation: Source.Location
 
         /// Creates a test identifier.
         ///
@@ -59,7 +59,7 @@ extension Test {
             module: String,
             suite: String? = nil,
             name: String,
-            sourceLocation: Test.Source.Location
+            sourceLocation: Source.Location
         ) {
             self.module = module
             self.suite = suite

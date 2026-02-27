@@ -30,7 +30,7 @@ extension Test {
         public let kind: Kind
 
         /// The source location where this trait was applied.
-        public let sourceLocation: Test.Source.Location?
+        public let sourceLocation: Source.Location?
 
         /// Creates a trait.
         ///
@@ -39,7 +39,7 @@ extension Test {
         ///   - sourceLocation: Where this trait was applied.
         public init(
             kind: Kind,
-            sourceLocation: Test.Source.Location? = nil
+            sourceLocation: Source.Location? = nil
         ) {
             self.kind = kind
             self.sourceLocation = sourceLocation
