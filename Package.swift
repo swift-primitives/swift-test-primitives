@@ -12,25 +12,82 @@ let package = Package(
         .visionOS(.v26),
     ],
     products: [
+        // MARK: - Sub-targets
+        .library(name: "Test Primitives Core", targets: ["Test Primitives Core"]),
+        .library(name: "Test Snapshot Primitives", targets: ["Test Snapshot Primitives"]),
+        .library(
+            name: "Test Primitives Standard Library Integration",
+            targets: ["Test Primitives Standard Library Integration"]
+        ),
+
+        // MARK: - Umbrella
         .library(name: "Test Primitives", targets: ["Test Primitives"]),
+
+        // MARK: - Test Support
+        .library(
+            name: "Test Primitives Test Support",
+            targets: ["Test Primitives Test Support"]
+        ),
     ],
     dependencies: [
         .package(path: "../swift-identity-primitives"),
         .package(path: "../swift-async-primitives"),
     ],
     targets: [
+        // MARK: - Core
+        .target(
+            name: "Test Primitives Core",
+            dependencies: [
+                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+            ]
+        ),
+
+        // MARK: - Snapshot
+        .target(
+            name: "Test Snapshot Primitives",
+            dependencies: [
+                "Test Primitives Core",
+                .product(name: "Async Primitives", package: "swift-async-primitives"),
+            ]
+        ),
+
+        // MARK: - Standard Library Integration
+        .target(
+            name: "Test Primitives Standard Library Integration",
+            dependencies: [
+                "Test Primitives Core",
+            ]
+        ),
+
+        // MARK: - Umbrella
         .target(
             name: "Test Primitives",
             dependencies: [
-                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
-                .product(name: "Async Primitives", package: "swift-async-primitives"),
-            ],
-            path: "Sources/Test Primitives"
+                "Test Primitives Core",
+                "Test Snapshot Primitives",
+                "Test Primitives Standard Library Integration",
+            ]
         ),
+
+        // MARK: - Test Support
+        .target(
+            name: "Test Primitives Test Support",
+            dependencies: [
+                "Test Primitives",
+                .product(
+                    name: "Identity Primitives Test Support",
+                    package: "swift-identity-primitives"
+                ),
+            ],
+            path: "Tests/Support"
+        ),
+
+        // MARK: - Tests
         .testTarget(
             name: "Test Primitives Tests",
             dependencies: [
                 "Test Primitives",
+                "Test Primitives Test Support",
             ]
         ),
     ],

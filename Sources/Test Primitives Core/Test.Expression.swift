@@ -5,8 +5,6 @@
 //  Captured expression for test assertions.
 //
 
-public import Identity_Primitives
-
 extension Test {
     /// A captured expression from source code.
     ///

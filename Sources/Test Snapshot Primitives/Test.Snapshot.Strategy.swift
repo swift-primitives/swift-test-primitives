@@ -5,8 +5,6 @@
 //  Snapshot strategy type.
 //
 
-public import Async_Primitives
-
 extension Test.Snapshot {
     /// A strategy for snapshotting values into a diffable format.
     ///

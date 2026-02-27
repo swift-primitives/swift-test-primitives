@@ -5,8 +5,6 @@
 //  Parameterized test case.
 //
 
-public import Identity_Primitives
-
 extension Test {
     /// A parameterized test case.
     ///

@@ -5,8 +5,6 @@
 //  Issue categories.
 //
 
-public import Identity_Primitives
-
 extension Test.Issue {
     /// Categories of issues that can occur during testing.
     ///

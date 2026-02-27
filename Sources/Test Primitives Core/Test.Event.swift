@@ -5,8 +5,6 @@
 //  Neutral event envelope for test execution.
 //
 
-public import Identity_Primitives
-
 extension Test {
     /// An event that occurred during test execution.
     ///

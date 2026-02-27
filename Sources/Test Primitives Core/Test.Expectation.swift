@@ -5,8 +5,6 @@
 //  Evaluated test expectation.
 //
 
-public import Identity_Primitives
-
 extension Test {
     /// An evaluated expectation from a test assertion.
     ///
