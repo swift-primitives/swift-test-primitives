@@ -2,6 +2,7 @@ import Testing
 import Test_Primitives_Test_Support
 
 private typealias SUT = Test_Primitives.Test
+private typealias Diff = Sequence_Difference_Primitives.Sequence.Difference
 
 @Suite("Test.Snapshot.Diff")
 struct TestSnapshotDiffTests {
@@ -14,7 +15,7 @@ struct TestSnapshotDiffTests {
 extension TestSnapshotDiffTests.Unit {
     @Test
     func `diff identical sequences returns all both`() {
-        let result = SUT.Snapshot.diff(["a", "b", "c"], ["a", "b", "c"])
+        let result = Diff.diff(["a", "b", "c"], ["a", "b", "c"])
         #expect(result.allSatisfy { difference in
             if case .both = difference { return true }
             return false
@@ -23,7 +24,7 @@ extension TestSnapshotDiffTests.Unit {
 
     @Test
     func `diff detects addition`() {
-        let result = SUT.Snapshot.diff(["a", "c"], ["a", "b", "c"])
+        let result = Diff.diff(["a", "c"], ["a", "b", "c"])
         let added = result.compactMap { difference -> String? in
             if case .second(let element) = difference { return element }
             return nil
@@ -33,7 +34,7 @@ extension TestSnapshotDiffTests.Unit {
 
     @Test
     func `diff detects removal`() {
-        let result = SUT.Snapshot.diff(["a", "b", "c"], ["a", "c"])
+        let result = Diff.diff(["a", "b", "c"], ["a", "c"])
         let removed = result.compactMap { difference -> String? in
             if case .first(let element) = difference { return element }
             return nil
@@ -43,7 +44,7 @@ extension TestSnapshotDiffTests.Unit {
 
     @Test
     func `diff detects replacement`() {
-        let result = SUT.Snapshot.diff(["a", "b"], ["a", "c"])
+        let result = Diff.diff(["a", "b"], ["a", "c"])
         let removed = result.compactMap { difference -> String? in
             if case .first(let e) = difference { return e }
             return nil
@@ -57,20 +58,20 @@ extension TestSnapshotDiffTests.Unit {
     }
 
     @Test
-    func `changeCounts counts correctly`() {
-        let differences = SUT.Snapshot.diff(["a", "b", "c"], ["a", "d"])
-        let (removed, added) = SUT.Snapshot.changeCounts(differences)
+    func `counts counts correctly`() {
+        let differences = Diff.diff(["a", "b", "c"], ["a", "d"])
+        let (removed, added) = Diff.counts(of: differences)
         #expect(removed >= 1)
         #expect(added >= 1)
     }
 
     @Test
     func `hunks generates patch marks`() {
-        let differences = SUT.Snapshot.diff(
+        let differences = Diff.diff(
             ["line1", "line2", "line3"],
             ["line1", "changed", "line3"]
         )
-        let result = SUT.Snapshot.hunks(from: differences)
+        let result = Diff.hunks(from: differences)
         #expect(!result.isEmpty)
         #expect(result[0].patchMark.hasPrefix("@@"))
     }
@@ -91,13 +92,13 @@ extension TestSnapshotDiffTests.Unit {
 extension TestSnapshotDiffTests.EdgeCase {
     @Test
     func `diff empty sequences`() {
-        let result: [SUT.Snapshot.Difference<String>] = SUT.Snapshot.diff([], [])
+        let result: [Diff.Change<String>] = Diff.diff([], [])
         #expect(result.isEmpty)
     }
 
     @Test
     func `diff from empty to non-empty`() {
-        let result = SUT.Snapshot.diff([], ["a", "b"])
+        let result = Diff.diff([], ["a", "b"])
         let added = result.compactMap { difference -> String? in
             if case .second(let e) = difference { return e }
             return nil
@@ -107,7 +108,7 @@ extension TestSnapshotDiffTests.EdgeCase {
 
     @Test
     func `diff from non-empty to empty`() {
-        let result = SUT.Snapshot.diff(["a", "b"], [])
+        let result = Diff.diff(["a", "b"], [])
         let removed = result.compactMap { difference -> String? in
             if case .first(let e) = difference { return e }
             return nil
@@ -117,8 +118,8 @@ extension TestSnapshotDiffTests.EdgeCase {
 
     @Test
     func `completely different sequences`() {
-        let result = SUT.Snapshot.diff(["a", "b", "c"], ["x", "y", "z"])
-        let (removed, added) = SUT.Snapshot.changeCounts(result)
+        let result = Diff.diff(["a", "b", "c"], ["x", "y", "z"])
+        let (removed, added) = Diff.counts(of: result)
         #expect(removed == 3)
         #expect(added == 3)
     }

@@ -37,7 +37,7 @@ extension Test.Snapshot.Diffing where Format == String {
                 let newLines = new.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
 
                 let changes = Sequence.Difference.diff(oldLines, newLines)
-                let (removed, added) = Sequence.Difference.changeCounts(changes)
+                let (removed, added) = Sequence.Difference.counts(of: changes)
 
                 let summary: String
                 if removed == 0 {
