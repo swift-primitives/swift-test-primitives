@@ -32,6 +32,7 @@ let package = Package(
     dependencies: [
         .package(path: "../swift-identity-primitives"),
         .package(path: "../swift-async-primitives"),
+        .package(path: "../swift-sequence-primitives"),
     ],
     targets: [
         // MARK: - Core
@@ -48,6 +49,10 @@ let package = Package(
             dependencies: [
                 "Test Primitives Core",
                 .product(name: "Async Primitives", package: "swift-async-primitives"),
+                .product(
+                    name: "Sequence Difference Primitives",
+                    package: "swift-sequence-primitives"
+                ),
             ]
         ),
 
