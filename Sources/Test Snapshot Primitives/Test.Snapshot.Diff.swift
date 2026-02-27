@@ -22,12 +22,13 @@ extension Test.Snapshot {
         contextLines: Int = 3
     ) -> Test.Text {
         let changes = Sequence.Difference.diff(old, new)
+        let (removed, inserted) = changes.counts()
 
-        guard changes.contains(where: \.isChange) else {
+        guard removed > .zero || inserted > .zero else {
             return Test.Text()
         }
 
-        let diffHunks = Sequence.Difference.hunks(from: changes, contextLines: contextLines)
+        let diffHunks = changes.hunks(contextLines: try! Cardinal(contextLines))
         var segments: [Test.Text.Segment] = []
 
         for (hunkIndex, hunk) in diffHunks.enumerated() {

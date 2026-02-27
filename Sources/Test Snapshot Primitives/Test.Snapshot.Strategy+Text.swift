@@ -37,15 +37,15 @@ extension Test.Snapshot.Diffing where Format == String {
                 let newLines = new.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
 
                 let changes = Sequence.Difference.diff(oldLines, newLines)
-                let (removed, added) = Sequence.Difference.counts(of: changes)
+                let (removed, added) = changes.counts()
 
                 let summary: String
-                if removed == 0 {
-                    summary = "\(added) line\(added == 1 ? "" : "s") added"
-                } else if added == 0 {
-                    summary = "\(removed) line\(removed == 1 ? "" : "s") removed"
+                if removed == .zero {
+                    summary = "\(added) line\(added == .one ? "" : "s") added"
+                } else if added == .zero {
+                    summary = "\(removed) line\(removed == .one ? "" : "s") removed"
                 } else {
-                    summary = "\(removed) line\(removed == 1 ? "" : "s") removed, \(added) line\(added == 1 ? "" : "s") added"
+                    summary = "\(removed) line\(removed == .one ? "" : "s") removed, \(added) line\(added == .one ? "" : "s") added"
                 }
 
                 let styledDiff = Test.Snapshot.styledDiff(oldLines, newLines)

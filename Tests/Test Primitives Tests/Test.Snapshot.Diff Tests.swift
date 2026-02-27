@@ -16,18 +16,22 @@ extension TestSnapshotDiffTests.Unit {
     @Test
     func `diff identical sequences returns all both`() {
         let result = Diff.diff(["a", "b", "c"], ["a", "b", "c"])
-        #expect(result.allSatisfy { difference in
-            if case .both = difference { return true }
-            return false
-        })
+        var iterator = result.makeIterator()
+        while let change = iterator.next() {
+            guard case .both = change else {
+                Issue.record("Expected .both, got \(change)")
+                return
+            }
+        }
     }
 
     @Test
     func `diff detects addition`() {
         let result = Diff.diff(["a", "c"], ["a", "b", "c"])
-        let added = result.compactMap { difference -> String? in
-            if case .second(let element) = difference { return element }
-            return nil
+        var added: [String] = []
+        var iterator = result.makeIterator()
+        while let change = iterator.next() {
+            if case .second(let element) = change { added.append(element) }
         }
         #expect(added == ["b"])
     }
@@ -35,9 +39,10 @@ extension TestSnapshotDiffTests.Unit {
     @Test
     func `diff detects removal`() {
         let result = Diff.diff(["a", "b", "c"], ["a", "c"])
-        let removed = result.compactMap { difference -> String? in
-            if case .first(let element) = difference { return element }
-            return nil
+        var removed: [String] = []
+        var iterator = result.makeIterator()
+        while let change = iterator.next() {
+            if case .first(let element) = change { removed.append(element) }
         }
         #expect(removed == ["b"])
     }
@@ -45,13 +50,12 @@ extension TestSnapshotDiffTests.Unit {
     @Test
     func `diff detects replacement`() {
         let result = Diff.diff(["a", "b"], ["a", "c"])
-        let removed = result.compactMap { difference -> String? in
-            if case .first(let e) = difference { return e }
-            return nil
-        }
-        let added = result.compactMap { difference -> String? in
-            if case .second(let e) = difference { return e }
-            return nil
+        var removed: [String] = []
+        var added: [String] = []
+        var iterator = result.makeIterator()
+        while let change = iterator.next() {
+            if case .first(let e) = change { removed.append(e) }
+            if case .second(let e) = change { added.append(e) }
         }
         #expect(removed == ["b"])
         #expect(added == ["c"])
@@ -59,19 +63,19 @@ extension TestSnapshotDiffTests.Unit {
 
     @Test
     func `counts counts correctly`() {
-        let differences = Diff.diff(["a", "b", "c"], ["a", "d"])
-        let (removed, added) = Diff.counts(of: differences)
-        #expect(removed >= 1)
-        #expect(added >= 1)
+        let changes = Diff.diff(["a", "b", "c"], ["a", "d"])
+        let (removed, added) = changes.counts()
+        #expect(removed >= .one)
+        #expect(added >= .one)
     }
 
     @Test
     func `hunks generates patch marks`() {
-        let differences = Diff.diff(
+        let changes = Diff.diff(
             ["line1", "line2", "line3"],
             ["line1", "changed", "line3"]
         )
-        let result = Diff.hunks(from: differences)
+        let result = changes.hunks()
         #expect(!result.isEmpty)
         #expect(result[0].patchMark.hasPrefix("@@"))
     }
@@ -92,16 +96,20 @@ extension TestSnapshotDiffTests.Unit {
 extension TestSnapshotDiffTests.EdgeCase {
     @Test
     func `diff empty sequences`() {
-        let result: [Diff.Change<String>] = Diff.diff([], [])
-        #expect(result.isEmpty)
+        let empty: [String] = []
+        let result = Diff.diff(empty, empty)
+        let (removed, inserted) = result.counts()
+        #expect(removed == .zero)
+        #expect(inserted == .zero)
     }
 
     @Test
     func `diff from empty to non-empty`() {
         let result = Diff.diff([], ["a", "b"])
-        let added = result.compactMap { difference -> String? in
-            if case .second(let e) = difference { return e }
-            return nil
+        var added: [String] = []
+        var iterator = result.makeIterator()
+        while let change = iterator.next() {
+            if case .second(let e) = change { added.append(e) }
         }
         #expect(added == ["a", "b"])
     }
@@ -109,9 +117,10 @@ extension TestSnapshotDiffTests.EdgeCase {
     @Test
     func `diff from non-empty to empty`() {
         let result = Diff.diff(["a", "b"], [])
-        let removed = result.compactMap { difference -> String? in
-            if case .first(let e) = difference { return e }
-            return nil
+        var removed: [String] = []
+        var iterator = result.makeIterator()
+        while let change = iterator.next() {
+            if case .first(let e) = change { removed.append(e) }
         }
         #expect(removed == ["a", "b"])
     }
@@ -119,7 +128,7 @@ extension TestSnapshotDiffTests.EdgeCase {
     @Test
     func `completely different sequences`() {
         let result = Diff.diff(["a", "b", "c"], ["x", "y", "z"])
-        let (removed, added) = Diff.counts(of: result)
+        let (removed, added) = result.counts()
         #expect(removed == 3)
         #expect(added == 3)
     }
