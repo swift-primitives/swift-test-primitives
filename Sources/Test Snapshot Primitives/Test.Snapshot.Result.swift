@@ -38,6 +38,13 @@ extension Test.Snapshot {
         ///
         /// Test should fail.
         case missingReference(path: String)
+
+        /// An inline snapshot was recorded to the source file.
+        ///
+        /// - Parameter sourceFile: Path to the source file that will be rewritten.
+        ///
+        /// Test should fail with instruction to re-run.
+        case recordedInline(sourceFile: String)
     }
 }
 
@@ -52,7 +59,7 @@ extension Test.Snapshot.Result {
         case .recorded:
             // Recording is typically considered passing (new snapshot created)
             return true
-        case .failed, .missingReference:
+        case .failed, .missingReference, .recordedInline:
             return false
         }
     }
@@ -76,6 +83,8 @@ extension Test.Snapshot.Result: CustomStringConvertible {
             return "Snapshot mismatch (reference: \(referencePath)): \(diff.summary)"
         case .missingReference(let path):
             return "Missing reference snapshot at: \(path)"
+        case .recordedInline(let sourceFile):
+            return "Inline snapshot recorded in: \(sourceFile). Re-run to assert."
         }
     }
 }
