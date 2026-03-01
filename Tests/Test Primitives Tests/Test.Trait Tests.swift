@@ -56,9 +56,26 @@ extension TestTraitTests.Unit {
     }
 
     @Test
-    func `custom factory`() {
-        let trait = SUT.Trait.custom("retry", value: "3")
-        #expect(trait.kind == .custom("retry", "3"))
+    func `exclusive factory`() {
+        let trait = SUT.Trait.exclusive(group: "db")
+        #expect(trait.kind == .exclusive("db"))
+    }
+
+    @Test
+    func `exclusive factory defaults to global`() {
+        let trait = SUT.Trait.exclusive
+        #expect(trait.kind == .exclusive("__global__"))
+    }
+
+    @Test
+    func `timed factory`() {
+        let trait = SUT.Trait.timed(iterations: 20, warmup: 3)
+        if case .timed(let config) = trait.kind {
+            #expect(config.iterations == 20)
+            #expect(config.warmup == 3)
+        } else {
+            Issue.record("Expected .timed kind")
+        }
     }
 
     @Test

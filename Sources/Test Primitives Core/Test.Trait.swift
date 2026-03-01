@@ -9,22 +9,7 @@ extension Test {
     /// A trait that modifies test behavior.
     ///
     /// `Trait` is a value type representing test modifiers like time limits,
-    /// tags, enabled conditions, and custom behaviors.
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let traits: [Test.Trait] = [
-    ///     .timeLimit(.seconds(30)),
-    ///     .tag("slow"),
-    ///     .enabled(if: ProcessInfo.processInfo.environment["CI"] != nil),
-    /// ]
-    /// ```
-    ///
-    /// ## Custom Traits
-    ///
-    /// Use `.custom` to define framework-specific traits that aren't
-    /// covered by the built-in kinds.
+    /// tags, enabled conditions, exclusion, and timed benchmarks.
     public struct Trait: Sendable, Hashable, Codable {
         /// The kind of trait.
         public let kind: Kind
@@ -101,14 +86,42 @@ extension Test.Trait {
         Self(kind: .serialized)
     }
 
-    /// Creates a custom trait.
+    /// Creates a trait for mutual exclusion within the global group.
+    ///
+    /// - Returns: An exclusive trait.
+    public static var exclusive: Self {
+        exclusive(group: "__global__")
+    }
+
+    /// Creates a trait for mutual exclusion within a specific group.
+    ///
+    /// - Parameter group: The exclusion group name.
+    /// - Returns: An exclusive trait.
+    public static func exclusive(group: String) -> Self {
+        Self(kind: .exclusive(group))
+    }
+
+    /// Creates a trait for measuring test execution time.
     ///
     /// - Parameters:
-    ///   - name: The custom trait name.
-    ///   - value: Optional string value.
-    /// - Returns: A custom trait.
-    public static func custom(_ name: String, value: String? = nil) -> Self {
-        Self(kind: .custom(name, value))
+    ///   - iterations: Number of measurement runs (default: 10).
+    ///   - warmup: Number of untimed warmup runs (default: 0).
+    ///   - threshold: Optional performance budget.
+    ///   - metric: Metric to check against threshold (default: .median).
+    /// - Returns: A timed trait.
+    public static func timed(
+        iterations: Int = 10,
+        warmup: Int = 0,
+        threshold: Duration? = nil,
+        metric: Test.Benchmark.Metric = .median
+    ) -> Self {
+        Self(kind: .timed(.init(
+            iterations: iterations,
+            warmup: warmup,
+            printResults: true,
+            threshold: threshold,
+            metric: metric
+        )))
     }
 }
 

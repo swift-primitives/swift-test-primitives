@@ -23,8 +23,11 @@ extension Test.Trait {
         /// The test must run serially (not in parallel).
         case serialized
 
-        /// A custom trait for framework-specific behaviors.
-        case custom(String, String?)
+        /// Mutual exclusion within a named group.
+        case exclusive(String)
+
+        /// Timed benchmark execution with configuration.
+        case timed(Test.Benchmark.Configuration)
     }
 }
 
@@ -58,12 +61,11 @@ extension Test.Trait.Kind: CustomStringConvertible {
         case .serialized:
             return ".serialized"
 
-        case .custom(let name, let value):
-            if let value {
-                return ".custom(\"\(name)\", value: \"\(value)\")"
-            } else {
-                return ".custom(\"\(name)\")"
-            }
+        case .exclusive(let group):
+            return ".exclusive(\"\(group)\")"
+
+        case .timed(let config):
+            return ".timed(iterations: \(config.iterations))"
         }
     }
 }
