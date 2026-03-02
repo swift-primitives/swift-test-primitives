@@ -48,6 +48,10 @@ extension Test {
             isPassing: Bool,
             failure: Failure? = nil
         ) {
+            precondition(!isPassing || failure == nil,
+                "Passing expectation must not have a failure")
+            precondition(isPassing || failure != nil,
+                "Failing expectation must have a failure reason")
             self.id = id
             self.expression = expression
             self.isPassing = isPassing
