@@ -19,7 +19,7 @@ extension Test.Snapshot {
     public static func styledDiff(
         _ old: [String],
         _ new: [String],
-        contextLines: Int = 3
+        contextLines: Cardinal = 3
     ) -> Test.Text {
         let changes = Sequence.Difference.diff(old, new)
         let (removed, inserted) = changes.counts()
@@ -28,7 +28,7 @@ extension Test.Snapshot {
             return Test.Text()
         }
 
-        let diffHunks = changes.hunks(contextLines: try! Cardinal(contextLines))
+        let diffHunks = changes.hunks(contextLines: contextLines)
         var segments: [Test.Text.Segment] = []
 
         for (hunkIndex, hunk) in diffHunks.enumerated() {

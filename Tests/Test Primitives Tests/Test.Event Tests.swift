@@ -126,4 +126,56 @@ extension TestEventTests.EdgeCase {
             #expect(decoded == result)
         }
     }
+
+    @Test
+    func `codable round-trip for caseStarted kind`() throws {
+        let testCase = SUT.Case(id: 1, arguments: "(x: 1)")
+        let original = SUT.Event(kind: .caseStarted(testCase))
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
+        #expect(decoded.id == original.id)
+        #expect(decoded.caseID == original.caseID)
+    }
+
+    @Test
+    func `codable round-trip for expectationChecked kind`() throws {
+        let expectation = SUT.Expectation(
+            id: 1,
+            expression: .init(id: 1, sourceCode: "x == 42", sourceLocation: .stub()),
+            isPassing: true
+        )
+        let original = SUT.Event(kind: .expectationChecked(expectation))
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
+        #expect(decoded.id == original.id)
+    }
+
+    @Test
+    func `codable round-trip for issueRecorded kind`() throws {
+        let issue = SUT.Issue(
+            kind: .errorCaught(type: "IOError", description: "file not found"),
+            sourceLocation: .stub(line: 42),
+            isKnown: true
+        )
+        let original = SUT.Event(kind: .issueRecorded(issue))
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
+        #expect(decoded.id == original.id)
+    }
+
+    @Test
+    func `codable round-trip for custom kind`() throws {
+        let original = SUT.Event(kind: .custom(name: "metric", payload: "42"))
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
+        #expect(decoded.id == original.id)
+    }
+
+    @Test
+    func `codable round-trip for testSkipped kind`() throws {
+        let original = SUT.Event(kind: .testSkipped("not ready"))
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
+        #expect(decoded.id == original.id)
+    }
 }

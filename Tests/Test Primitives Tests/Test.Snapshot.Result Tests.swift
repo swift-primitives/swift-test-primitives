@@ -40,6 +40,13 @@ extension TestSnapshotResultTests.Unit {
         #expect(result.isFailing)
         #expect(!result.isPassing)
     }
+
+    @Test
+    func `recordedInline is failing`() {
+        let result = SUT.Snapshot.Result.recordedInline(sourceFile: "/Tests/MyTest.swift")
+        #expect(result.isFailing)
+        #expect(!result.isPassing)
+    }
 }
 
 // MARK: - EdgeCase
@@ -52,6 +59,7 @@ extension TestSnapshotResultTests.EdgeCase {
             .recorded(path: "/p"),
             .failed(diff: .init(summary: "diff"), referencePath: "/r"),
             .missingReference(path: "/m"),
+            .recordedInline(sourceFile: "/t.swift"),
         ]
         for result in cases {
             #expect(!result.description.isEmpty)

@@ -81,10 +81,8 @@ extension Test.Expectation: CustomStringConvertible {
     public var description: String {
         if isPassing {
             return "✓ \(expression.sourceCode)"
-        } else if let failure {
-            return "✗ \(expression.sourceCode): \(failure.message)"
         } else {
-            return "✗ \(expression.sourceCode)"
+            return "✗ \(expression.sourceCode): \(failure!.message)"
         }
     }
 }
