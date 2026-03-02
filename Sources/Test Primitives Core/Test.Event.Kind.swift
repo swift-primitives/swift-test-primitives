@@ -7,7 +7,7 @@
 
 extension Test.Event {
     /// Categories of events that occur during testing.
-    public enum Kind: Sendable, Codable {
+    public enum Kind: Sendable, Hashable, Codable {
         // MARK: - Run Lifecycle
 
         /// The test run started.

@@ -14,7 +14,10 @@ extension Test.Benchmark {
         /// Number of warmup iterations (not measured).
         public var warmup: Int
 
-        /// Whether to print results to console.
+        /// Whether a reporter should print results to console.
+        ///
+        /// This is inert configuration consumed by higher-layer reporters.
+        /// No Tier 1 code reads or acts on this value.
         public var printResults: Bool
 
         /// Optional performance threshold to enforce.

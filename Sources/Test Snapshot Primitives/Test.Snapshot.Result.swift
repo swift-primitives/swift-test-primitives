@@ -70,6 +70,12 @@ extension Test.Snapshot.Result {
     }
 }
 
+// MARK: - Hashable
+
+/// Structural equality: two results are equal when their cases
+/// and all associated values compare equal.
+extension Test.Snapshot.Result: Hashable {}
+
 // MARK: - CustomStringConvertible
 
 extension Test.Snapshot.Result: CustomStringConvertible {
