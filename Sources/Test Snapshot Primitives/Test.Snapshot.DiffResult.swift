@@ -36,14 +36,26 @@ extension Test.Snapshot {
         /// and ``Test/Text/Segment/Style/diffContext`` for visual formatting.
         public let unifiedDiff: Test.Text?
 
+        /// Structural operations describing individual changes.
+        ///
+        /// Present when the diffing strategy produces semantic, tree-aware
+        /// comparisons (e.g., structural JSON diff). `nil` for line-based diffs.
+        public let structuralOperations: [StructuralOperation]?
+
         /// Creates a diff result.
         ///
         /// - Parameters:
         ///   - summary: Brief description of the difference.
         ///   - unifiedDiff: Detailed styled diff, if available.
-        public init(summary: String, unifiedDiff: Test.Text? = nil) {
+        ///   - structuralOperations: Structural change operations, if available.
+        public init(
+            summary: String,
+            unifiedDiff: Test.Text? = nil,
+            structuralOperations: [StructuralOperation]? = nil
+        ) {
             self.summary = summary
             self.unifiedDiff = unifiedDiff
+            self.structuralOperations = structuralOperations
         }
     }
 }

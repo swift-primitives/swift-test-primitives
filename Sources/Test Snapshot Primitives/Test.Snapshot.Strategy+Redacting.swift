@@ -17,7 +17,7 @@ extension Test.Snapshot.Strategy {
     /// - Parameter redactions: The redactions to apply in order.
     /// - Returns: A new strategy with redactions composed into its capture closures.
     public func redacting(
-        _ redactions: [Redaction<Format>]
+        _ redactions: [Test.Snapshot.Redaction<Format>]
     ) -> Self {
         guard !redactions.isEmpty else { return self }
 
@@ -48,7 +48,7 @@ extension Test.Snapshot.Strategy {
     /// - Parameter redaction: The redaction to apply.
     /// - Returns: A new strategy with the redaction composed into its capture closures.
     public func redacting(
-        _ redaction: Redaction<Format>
+        _ redaction: Test.Snapshot.Redaction<Format>
     ) -> Self {
         redacting([redaction])
     }
