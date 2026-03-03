@@ -33,6 +33,14 @@ extension Test.Benchmark {
         /// This is inert configuration consumed by higher-layer scope providers.
         public var trackAllocations: Bool
 
+        /// Optional tolerance for baseline regression detection.
+        ///
+        /// When set, the scope provider loads a stored baseline measurement,
+        /// compares the current result, and fails if the regression exceeds
+        /// this fraction (e.g. `0.10` = 10% tolerance).
+        /// This is inert configuration consumed by higher-layer scope providers.
+        public var baselineTolerance: Double?
+
         /// Creates a timed configuration.
         public init(
             iterations: Int = 10,
@@ -40,7 +48,8 @@ extension Test.Benchmark {
             printResults: Bool = true,
             threshold: Duration? = nil,
             metric: Metric = .median,
-            trackAllocations: Bool = false
+            trackAllocations: Bool = false,
+            baselineTolerance: Double? = nil
         ) {
             self.iterations = iterations
             self.warmup = warmup
@@ -48,6 +57,7 @@ extension Test.Benchmark {
             self.threshold = threshold
             self.metric = metric
             self.trackAllocations = trackAllocations
+            self.baselineTolerance = baselineTolerance
         }
     }
 }
@@ -62,6 +72,7 @@ extension Test.Benchmark.Configuration: Codable {
         case threshold
         case metric
         case trackAllocations
+        case baselineTolerance
     }
 
     public init(from decoder: any Decoder) throws {
@@ -72,5 +83,6 @@ extension Test.Benchmark.Configuration: Codable {
         self.threshold = try container.decodeIfPresent(Duration.self, forKey: .threshold)
         self.metric = try container.decode(Test.Benchmark.Metric.self, forKey: .metric)
         self.trackAllocations = try container.decodeIfPresent(Bool.self, forKey: .trackAllocations) ?? false
+        self.baselineTolerance = try container.decodeIfPresent(Double.self, forKey: .baselineTolerance)
     }
 }
