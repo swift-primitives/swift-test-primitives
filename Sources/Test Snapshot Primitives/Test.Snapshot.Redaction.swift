@@ -23,7 +23,7 @@ extension Test.Snapshot {
     ///
     /// Redactions are closure-based at L1. Concrete constructors using optics
     /// or tree navigation are provided at L3.
-    public struct Redaction<Format: Sendable>: Sendable {
+    public struct Redaction<Format>: Sendable {
         /// The transformation to apply to the snapshot format.
         public let apply: @Sendable (Format) -> Format
 
