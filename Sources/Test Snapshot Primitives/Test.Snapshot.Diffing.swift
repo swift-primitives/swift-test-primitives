@@ -5,6 +5,8 @@
 //  Serialization and comparison logic.
 //
 
+public import Witness_Primitives
+
 extension Test.Snapshot {
     /// Encapsulates serialization and comparison for a format.
     ///
@@ -35,7 +37,7 @@ extension Test.Snapshot {
     ///     }
     /// }
     /// ```
-    public struct Diffing<Format>: Sendable {
+    public struct Diffing<Format>: Sendable, Witness.`Protocol` {
         /// Serializes format to bytes for disk storage.
         public let toBytes: @Sendable (Format) -> [UInt8]
 

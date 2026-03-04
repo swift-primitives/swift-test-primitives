@@ -21,7 +21,7 @@ extension Test.Snapshot.Strategy {
     ) -> Self {
         guard !redactions.isEmpty else { return self }
 
-        let redact: @Sendable (Format) -> Format = { format in
+        let redact: (Format) -> Format = { format in
             redactions.reduce(format) { result, redaction in
                 redaction.apply(result)
             }
@@ -33,9 +33,9 @@ extension Test.Snapshot.Strategy {
             pathExtension: pathExtension,
             diffing: diffing,
             syncSnapshot: syncSnapshot.map { sync in
-                { @Sendable value in redact(sync(value)) }
+                { value in redact(sync(value)) }
             },
-            asyncSnapshot: { @Sendable value in
+            asyncSnapshot: { value in
                 Async.Callback {
                     redact(await capturedSnapshot(value)())
                 }

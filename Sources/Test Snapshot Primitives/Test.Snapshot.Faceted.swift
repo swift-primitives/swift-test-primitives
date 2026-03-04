@@ -28,7 +28,7 @@ extension Test.Snapshot {
     ///
     /// The primary strategy produces a comprehensive file-based snapshot.
     /// Each facet produces a focused view suitable for inline assertions.
-    public struct Faceted<Value: Sendable>: Sendable {
+    public struct Faceted<Value> {
         /// The comprehensive strategy — typically saved to disk.
         public let primary: Strategy<Value, Swift.String>
 

@@ -35,6 +35,7 @@ let package = Package(
         .package(path: "../swift-async-primitives"),
         .package(path: "../swift-sequence-primitives"),
         .package(path: "../swift-sample-primitives"),
+        .package(path: "../swift-witness-primitives"),
     ],
     targets: [
         // MARK: - Core
@@ -57,6 +58,7 @@ let package = Package(
                     name: "Sequence Difference Primitives",
                     package: "swift-sequence-primitives"
                 ),
+                .product(name: "Witness Primitives", package: "swift-witness-primitives"),
             ]
         ),
 

@@ -5,6 +5,8 @@
 //  Snapshot strategy type.
 //
 
+public import Witness_Primitives
+
 extension Test.Snapshot {
     /// A strategy for snapshotting values into a diffable format.
     ///
@@ -58,7 +60,7 @@ extension Test.Snapshot {
     ///     }
     /// }
     /// ```
-    public struct Strategy<Value, Format>: Sendable where Value: Sendable, Format: Sendable {
+    public struct Strategy<Value, Format>: Witness.`Protocol` where Format: Sendable {
         /// File extension for snapshot files (e.g., "txt", "json", "png").
         ///
         /// Set to `nil` to use no extension.
@@ -71,13 +73,13 @@ extension Test.Snapshot {
         ///
         /// Returns an `Async.Callback` that produces the format when called.
         /// This allows both synchronous and asynchronous capture.
-        public var snapshot: @Sendable (Value) -> Async.Callback<Format>
+        public var snapshot: (Value) -> Async.Callback<Format>
 
         /// The sync snapshot capture function, if available.
         ///
         /// Non-nil when the strategy was created with a synchronous capture function.
         /// Used by sync `assertSnapshot` to avoid blocking.
-        public var syncSnapshot: (@Sendable (Value) -> Format)?
+        public var syncSnapshot: ((Value) -> Format)?
 
         // MARK: - Initializers
 
@@ -90,7 +92,7 @@ extension Test.Snapshot {
         public init(
             pathExtension: String?,
             diffing: Diffing<Format>,
-            asyncSnapshot: @escaping @Sendable (_ value: Value) -> Async.Callback<Format>
+            asyncSnapshot: @escaping (_ value: Value) -> Async.Callback<Format>
         ) {
             self.pathExtension = pathExtension
             self.diffing = diffing
@@ -107,7 +109,7 @@ extension Test.Snapshot {
         public init(
             pathExtension: String?,
             diffing: Diffing<Format>,
-            snapshot: @escaping @Sendable (_ value: Value) -> Format
+            snapshot: @escaping (_ value: Value) -> Format
         ) {
             self.pathExtension = pathExtension
             self.diffing = diffing
@@ -121,8 +123,8 @@ extension Test.Snapshot {
         init(
             pathExtension: String?,
             diffing: Diffing<Format>,
-            syncSnapshot: (@Sendable (Value) -> Format)?,
-            asyncSnapshot: @escaping @Sendable (Value) -> Async.Callback<Format>
+            syncSnapshot: ((Value) -> Format)?,
+            asyncSnapshot: @escaping (Value) -> Async.Callback<Format>
         ) {
             self.pathExtension = pathExtension
             self.diffing = diffing
@@ -148,13 +150,13 @@ extension Test.Snapshot {
         ///
         /// - Parameter transform: Function to transform new value to original value type.
         /// - Returns: A strategy for the new value type.
-        public func pullback<NewValue: Sendable>(
-            _ transform: @escaping @Sendable (_ otherValue: NewValue) -> Value
+        public func pullback<NewValue>(
+            _ transform: @escaping (_ otherValue: NewValue) -> Value
         ) -> Test.Snapshot.Strategy<NewValue, Format> {
             let capturedSnapshot = self.snapshot
             let capturedSyncSnapshot = self.syncSnapshot
 
-            var newSyncSnapshot: (@Sendable (NewValue) -> Format)?
+            var newSyncSnapshot: ((NewValue) -> Format)?
             if let sync = capturedSyncSnapshot {
                 newSyncSnapshot = { newValue in sync(transform(newValue)) }
             }
@@ -176,8 +178,8 @@ extension Test.Snapshot {
         ///
         /// - Parameter transform: Function that returns an `Async.Callback` producing the original value type.
         /// - Returns: An async strategy for the new value type.
-        public func asyncPullback<NewValue: Sendable>(
-            _ transform: @escaping @Sendable (_ otherValue: NewValue) -> Async.Callback<Value>
+        public func asyncPullback<NewValue>(
+            _ transform: @escaping (_ otherValue: NewValue) -> Async.Callback<Value>
         ) -> Test.Snapshot.Strategy<NewValue, Format> {
             let capturedSnapshot = self.snapshot
             return Test.Snapshot.Strategy<NewValue, Format>(
@@ -217,7 +219,7 @@ extension Test.Snapshot {
     ///
     /// This is convenient for types that are their own snapshot format,
     /// such as `String` or `[UInt8]`.
-    public typealias SimplyStrategy<Format: Sendable> = Strategy<Format, Format>
+    public typealias SimplyStrategy<Format> = Strategy<Format, Format>
 }
 
 extension Test.Snapshot.Strategy where Value == Format {
