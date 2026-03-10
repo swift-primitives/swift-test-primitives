@@ -65,7 +65,7 @@ extension Test.Trait.Kind: CustomStringConvertible {
             return ".exclusive(\"\(group)\")"
 
         case .timed(let config):
-            return ".timed(iterations: \(config.iterations))"
+            return ".timed(iterations: \(config.iteration.count))"
         }
     }
 }

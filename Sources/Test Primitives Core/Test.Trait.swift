@@ -104,23 +104,30 @@ extension Test.Trait {
     /// Creates a trait for measuring test execution time.
     ///
     /// - Parameters:
-    ///   - iterations: Number of measurement runs (default: 10).
+    ///   - iterations: Number of measurement runs (default: 10). Fallback when no
+    ///     explicit `#benchmark`/`measure {}` call is present.
     ///   - warmup: Number of untimed warmup runs (default: 0).
     ///   - threshold: Optional performance budget.
     ///   - metric: Metric to check against threshold (default: .median).
+    ///   - baselineTolerance: Optional regression tolerance (e.g. `0.10` = 10%).
+    ///   - trackAllocations: Whether to track memory allocations per iteration.
     /// - Returns: A timed trait.
     public static func timed(
         iterations: Int = 10,
         warmup: Int = 0,
         threshold: Duration? = nil,
-        metric: Test.Benchmark.Metric = .median
+        metric: Test.Benchmark.Metric = .median,
+        baselineTolerance: Double? = nil,
+        trackAllocations: Bool = false
     ) -> Self {
         Self(kind: .timed(.init(
-            iterations: iterations,
-            warmup: warmup,
-            printResults: true,
-            threshold: threshold,
-            metric: metric
+            iteration: .init(count: iterations, warmup: warmup),
+            evaluation: .init(
+                threshold: threshold,
+                metric: metric,
+                baselineTolerance: baselineTolerance,
+                trackAllocations: trackAllocations
+            )
         )))
     }
 }
