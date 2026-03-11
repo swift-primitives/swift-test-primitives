@@ -71,8 +71,8 @@ extension TestTraitTests.Unit {
     func `timed factory`() {
         let trait = SUT.Trait.timed(iterations: 20, warmup: 3)
         if case .timed(let config) = trait.kind {
-            #expect(config.iterations == 20)
-            #expect(config.warmup == 3)
+            #expect(config.iteration.count == 20)
+            #expect(config.iteration.warmup == 3)
         } else {
             Issue.record("Expected .timed kind")
         }
