@@ -130,7 +130,7 @@ extension TestBenchmarkComplexityTests.Evidence {
     }
 
     @Test
-    func `doubling ratios are computed`() {
+    func `growth ratios are computed`() {
         let sizes = [100, 200, 400]
         let points: [(size: Int, metric: Duration)] = sizes.map { n in
             (size: n, metric: Duration.milliseconds(n))
@@ -141,9 +141,71 @@ extension TestBenchmarkComplexityTests.Evidence {
             classes: [.linear]
         )
 
-        #expect(evidence.doublingRatios.count == 2)
-        #expect(abs(evidence.doublingRatios[0] - 2.0) < 0.01)
-        #expect(abs(evidence.doublingRatios[1] - 2.0) < 0.01)
+        #expect(evidence.growthRatios.count == 2)
+        #expect(abs(evidence.growthRatios[0] - 2.0) < 0.01)
+        #expect(abs(evidence.growthRatios[1] - 2.0) < 0.01)
+    }
+
+    @Test
+    func `effective exponent matches theoretical for power laws`() {
+        let sizes = [100, 1_000, 10_000, 100_000]
+        let points: [(size: Int, metric: Duration)] = sizes.map { n in
+            let seconds = Double(n) * Double(n) * 1e-9
+            return (size: n, metric: Duration.seconds(seconds))
+        }
+
+        let evidence = SUT.Benchmark.Complexity.evidence(
+            from: points,
+            classes: [.linear, .quadratic, .cubic]
+        )
+
+        let quadratic = evidence.candidates.first { $0.complexity == .quadratic }
+        #expect(quadratic != nil)
+        #expect(abs(quadratic!.effectiveExponent - 2.0) < 0.01)
+
+        let linear = evidence.candidates.first { $0.complexity == .linear }
+        #expect(abs(linear!.effectiveExponent - 1.0) < 0.01)
+
+        let cubic = evidence.candidates.first { $0.complexity == .cubic }
+        #expect(abs(cubic!.effectiveExponent - 3.0) < 0.01)
+    }
+
+    @Test
+    func `effective exponent for non-power-law classes`() {
+        let sizes = [100, 1_000, 10_000, 100_000]
+        let points: [(size: Int, metric: Duration)] = sizes.map { n in
+            (size: n, metric: Duration.milliseconds(n / 10))
+        }
+
+        let evidence = SUT.Benchmark.Complexity.evidence(
+            from: points,
+            classes: [.logarithmic, .linearithmic]
+        )
+
+        // Logarithmic effective exponent is small and positive (≈ 0.1-0.2).
+        let logarithmic = evidence.candidates.first { $0.complexity == .logarithmic }
+        #expect(logarithmic!.effectiveExponent > 0)
+        #expect(logarithmic!.effectiveExponent < 0.5)
+
+        // Linearithmic effective exponent is slightly above 1.0.
+        let linearithmic = evidence.candidates.first { $0.complexity == .linearithmic }
+        #expect(linearithmic!.effectiveExponent > 1.0)
+        #expect(linearithmic!.effectiveExponent < 1.3)
+    }
+
+    @Test
+    func `metric CV is near zero for constant durations`() {
+        let sizes = [100, 1_000, 10_000, 100_000]
+        let points: [(size: Int, metric: Duration)] = sizes.map { n in
+            (size: n, metric: Duration.milliseconds(50))
+        }
+
+        let evidence = SUT.Benchmark.Complexity.evidence(
+            from: points,
+            classes: [.constant, .linear]
+        )
+
+        #expect(evidence.metricCV < 1e-10)
     }
 
     @Test
@@ -183,7 +245,7 @@ extension TestBenchmarkComplexityTests.EdgeCase {
         )
 
         #expect(evidence.candidates.isEmpty)
-        #expect(evidence.doublingRatios.isEmpty)
+        #expect(evidence.growthRatios.isEmpty)
         #expect(evidence.exponent.value == 0)
     }
 
@@ -221,5 +283,21 @@ extension TestBenchmarkComplexityTests.EdgeCase {
         // Points should be sorted by size in the output.
         #expect(evidence.points[0].size < evidence.points[1].size)
         #expect(evidence.points[1].size < evidence.points[2].size)
+    }
+
+    @Test
+    func `empty input returns degenerate evidence`() {
+        let points: [(size: Int, metric: Duration)] = []
+
+        let evidence = SUT.Benchmark.Complexity.evidence(
+            from: points,
+            classes: [.linear, .quadratic]
+        )
+
+        #expect(evidence.candidates.isEmpty)
+        #expect(evidence.growthRatios.isEmpty)
+        #expect(evidence.exponent.value == 0)
+        #expect(evidence.points.isEmpty)
+        #expect(evidence.metricCV == .infinity)
     }
 }

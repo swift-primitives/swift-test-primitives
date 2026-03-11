@@ -9,8 +9,9 @@ extension Test.Benchmark.Complexity {
     /// Complete analytical evidence from measured complexity data.
     ///
     /// Raw output of the evidence construction algorithm. Contains the
-    /// continuous exponent estimate, discrete candidate fits, doubling
-    /// ratios, monotonicity assessment, and the original data points.
+    /// continuous exponent estimate, discrete candidate fits, growth
+    /// ratios, monotonicity assessment, metric variation, and the
+    /// original data points.
     ///
     /// This is an evidence-level type — it contains no policy interpretation,
     /// confidence assignment, or classification decisions. Those are applied
@@ -24,14 +25,15 @@ extension Test.Benchmark.Complexity {
         /// Per-class OLS regression fits, sorted by R² descending.
         public let candidates: [CandidateFit]
 
-        /// Doubling ratios T(nᵢ₊₁)/T(nᵢ) for consecutive size pairs.
+        /// Growth ratios T(nᵢ₊₁)/T(nᵢ) for consecutive size pairs.
         ///
-        /// Provides human-intuitive growth indication:
-        /// - ratio ≈ 1: O(1)
-        /// - ratio ≈ 2: O(n)
-        /// - ratio ≈ 4: O(n²)
-        /// - ratio ≈ 8: O(n³)
-        public let doublingRatios: [Double]
+        /// For geometric sizes with ratio k, the growth ratio approximates
+        /// k^exponent for the underlying complexity class:
+        /// - O(1): ratio ≈ 1 (independent of k)
+        /// - O(n): ratio ≈ k
+        /// - O(n²): ratio ≈ k²
+        /// - O(n³): ratio ≈ k³
+        public let growthRatios: [Double]
 
         /// Mann-Kendall monotonicity assessment of durations ordered by size.
         public let monotonicity: Test.Benchmark.Trend
@@ -42,18 +44,31 @@ extension Test.Benchmark.Complexity {
         /// extracted from per-size-point measurements (e.g., median).
         public let points: [(size: Int, metric: Duration)]
 
+        /// Coefficient of variation of the metric values across size points.
+        ///
+        /// A pure statistical fact about the data, not a policy decision.
+        /// Low values suggest constant-time behavior:
+        /// - CV < 0.02: very likely constant
+        /// - CV < 0.05: probably constant
+        /// - CV < 0.10: possibly constant
+        ///
+        /// Returns `.infinity` when fewer than 2 valid points exist.
+        public let metricCV: Double
+
         public init(
             exponent: Exponent,
             candidates: [CandidateFit],
-            doublingRatios: [Double],
+            growthRatios: [Double],
             monotonicity: Test.Benchmark.Trend,
-            points: [(size: Int, metric: Duration)]
+            points: [(size: Int, metric: Duration)],
+            metricCV: Double
         ) {
             self.exponent = exponent
             self.candidates = candidates
-            self.doublingRatios = doublingRatios
+            self.growthRatios = growthRatios
             self.monotonicity = monotonicity
             self.points = points
+            self.metricCV = metricCV
         }
     }
 }
