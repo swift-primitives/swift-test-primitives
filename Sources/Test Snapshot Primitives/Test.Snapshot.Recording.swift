@@ -68,12 +68,5 @@ extension Test.Snapshot {
 // MARK: - CustomStringConvertible
 
 extension Test.Snapshot.Recording: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .never: return "never"
-        case .missing: return "missing"
-        case .failed: return "failed"
-        case .all: return "all"
-        }
-    }
+    public var description: String { rawValue }
 }
