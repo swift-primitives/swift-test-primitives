@@ -28,7 +28,7 @@ extension TestSnapshotResultTests.Unit {
 
     @Test
     func `failed is failing`() {
-        let diff = SUT.Snapshot.DiffResult(summary: "1 line differs")
+        let diff = SUT.Snapshot.Diff.Result(summary: "1 line differs")
         let result = SUT.Snapshot.Result.failed(diff: diff, referencePath: "/ref.txt")
         #expect(result.isFailing)
         #expect(!result.isPassing)

@@ -4,18 +4,18 @@ import Foundation
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Snapshot.DiffResult")
-struct TestSnapshotDiffResultTests {
+@Suite("Test.Snapshot.Diff.Result")
+struct TestSnapshotDiff.ResultTests {
     @Suite struct Unit {}
     @Suite struct EdgeCase {}
 }
 
 // MARK: - Unit
 
-extension TestSnapshotDiffResultTests.Unit {
+extension TestSnapshotDiff.ResultTests.Unit {
     @Test
     func `init with summary only`() {
-        let result = SUT.Snapshot.DiffResult(summary: "3 lines differ")
+        let result = SUT.Snapshot.Diff.Result(summary: "3 lines differ")
         #expect(result.summary == "3 lines differ")
         #expect(result.unifiedDiff == nil)
     }
@@ -26,7 +26,7 @@ extension TestSnapshotDiffResultTests.Unit {
             .init("-old", style: .diffRemoved),
             .init("+new", style: .diffAdded),
         ]
-        let result = SUT.Snapshot.DiffResult(
+        let result = SUT.Snapshot.Diff.Result(
             summary: "1 line changed", unifiedDiff: diff
         )
         #expect(result.summary == "1 line changed")
@@ -35,32 +35,32 @@ extension TestSnapshotDiffResultTests.Unit {
 
     @Test
     func `description matches summary`() {
-        let result = SUT.Snapshot.DiffResult(summary: "test summary")
+        let result = SUT.Snapshot.Diff.Result(summary: "test summary")
         #expect(result.description == "test summary")
     }
 }
 
 // MARK: - EdgeCase
 
-extension TestSnapshotDiffResultTests.EdgeCase {
+extension TestSnapshotDiff.ResultTests.EdgeCase {
     @Test
     func `codable round-trip`() throws {
         let diff: SUT.Text = [
             .init("-removed", style: .diffRemoved),
             .init("+added", style: .diffAdded),
         ]
-        let original = SUT.Snapshot.DiffResult(
+        let original = SUT.Snapshot.Diff.Result(
             summary: "1 change", unifiedDiff: diff
         )
         let data = try JSONEncoder().encode(original)
-        let decoded = try JSONDecoder().decode(SUT.Snapshot.DiffResult.self, from: data)
+        let decoded = try JSONDecoder().decode(SUT.Snapshot.Diff.Result.self, from: data)
         #expect(decoded == original)
     }
 
     @Test
     func `equal values are equal`() {
-        let a = SUT.Snapshot.DiffResult(summary: "same")
-        let b = SUT.Snapshot.DiffResult(summary: "same")
+        let a = SUT.Snapshot.Diff.Result(summary: "same")
+        let b = SUT.Snapshot.Diff.Result(summary: "same")
         #expect(a == b)
     }
 }

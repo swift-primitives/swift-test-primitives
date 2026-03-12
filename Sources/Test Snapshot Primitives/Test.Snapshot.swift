@@ -13,7 +13,7 @@ extension Test {
     /// - ``Diffing``: Serialization and comparison logic
     /// - ``Recording``: When to record vs compare
     /// - ``Result``: Outcome of a snapshot comparison
-    /// - ``DiffResult``: Structured difference description
+    /// - ``Diff/Result``: Structured difference description
     ///
     /// All types are `Sendable` and Foundation-free.
     public enum Snapshot {}

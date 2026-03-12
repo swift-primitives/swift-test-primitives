@@ -31,7 +31,7 @@ extension Test.Snapshot {
     ///             fromBytes: { bytes in MyCustomFormat.deserialize(String(decoding: bytes, as: UTF8.self)) },
     ///             diff: { old, new in
     ///                 guard old != new else { return nil }
-    ///                 return DiffResult(summary: "Formats differ")
+    ///                 return Diff.Result(summary: "Formats differ")
     ///             }
     ///         )
     ///     }
@@ -48,8 +48,8 @@ extension Test.Snapshot {
 
         /// Compares two format values.
         ///
-        /// Returns `nil` if values are equal, or a ``DiffResult`` describing the difference.
-        public let diff: @Sendable (Format, Format) -> DiffResult?
+        /// Returns `nil` if values are equal, or a ``Diff.Result`` describing the difference.
+        public let diff: @Sendable (Format, Format) -> Diff.Result?
 
         /// Creates a diffing strategy.
         ///
@@ -60,7 +60,7 @@ extension Test.Snapshot {
         public init(
             toBytes: @escaping @Sendable (Format) -> [UInt8],
             fromBytes: @escaping @Sendable ([UInt8]) -> Format?,
-            diff: @escaping @Sendable (Format, Format) -> DiffResult?
+            diff: @escaping @Sendable (Format, Format) -> Diff.Result?
         ) {
             self.toBytes = toBytes
             self.fromBytes = fromBytes

@@ -48,7 +48,7 @@ extension Test.Snapshot.Diffing where Format == [UInt8] {
                     summary = "Binary data differs"
                 }
 
-                return Test.Snapshot.DiffResult(summary: summary)
+                return Test.Snapshot.Diff.Result(summary: summary)
             }
         )
     }

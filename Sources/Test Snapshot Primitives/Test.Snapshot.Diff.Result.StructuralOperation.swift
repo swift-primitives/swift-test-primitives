@@ -1,11 +1,11 @@
 //
-//  Test.Snapshot.DiffResult.StructuralOperation.swift
+//  Test.Snapshot.Diff.Result.StructuralOperation.swift
 //  swift-test-primitives
 //
 //  Format-agnostic representation of a structural change.
 //
 
-extension Test.Snapshot.DiffResult {
+extension Test.Snapshot.Diff.Result {
     /// A single structural change between two snapshots.
     ///
     /// Provides a format-agnostic, string-based representation of a
@@ -15,7 +15,7 @@ extension Test.Snapshot.DiffResult {
     /// ## Example
     ///
     /// ```swift
-    /// let result = DiffResult(
+    /// let result = Diff.Result(
     ///     summary: "2 changes",
     ///     structuralOperations: [
     ///         .added(path: "email", value: "\"alice@example.com\""),

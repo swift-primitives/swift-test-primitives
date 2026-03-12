@@ -1,5 +1,5 @@
 //
-//  Test.Benchmark.Complexity.CandidateFit.swift
+//  Test.Benchmark.Complexity.Candidate.Fit.swift
 //  swift-test-primitives
 //
 //  Per-class regression fit result.
@@ -7,15 +7,15 @@
 
 import Sample_Primitives
 
-extension Test.Benchmark.Complexity {
+extension Test.Benchmark.Complexity.Candidate {
     /// Per-class regression fit result.
     ///
     /// Represents the OLS regression T ≈ slope·f(n) + intercept for a
     /// specific complexity class, where f(n) is the class's predictor
-    /// ``Class/transform(_:)``.
-    public struct CandidateFit: Sendable, Hashable {
+    /// ``Complexity/Class/transform(_:)``.
+    public struct Fit: Sendable, Hashable {
         /// The complexity class this fit was computed for.
-        public let complexity: Class
+        public let complexity: Test.Benchmark.Complexity.Class
 
         /// The OLS regression fit for this class's predictor transform.
         public let regression: Sample.Regression.Fit
@@ -33,7 +33,7 @@ extension Test.Benchmark.Complexity {
         public let effectiveExponent: Double
 
         public init(
-            complexity: Class,
+            complexity: Test.Benchmark.Complexity.Class,
             regression: Sample.Regression.Fit,
             effectiveExponent: Double
         ) {

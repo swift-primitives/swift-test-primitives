@@ -30,7 +30,7 @@ extension Test.Snapshot {
         ///   - referencePath: Path to the reference snapshot file.
         ///
         /// Test should fail.
-        case failed(diff: DiffResult, referencePath: String)
+        case failed(diff: Diff.Result, referencePath: String)
 
         /// No reference snapshot exists and recording is disabled.
         ///

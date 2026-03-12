@@ -23,7 +23,7 @@ extension Test.Benchmark.Complexity {
         public let exponent: Exponent
 
         /// Per-class OLS regression fits, sorted by R² descending.
-        public let candidates: [CandidateFit]
+        public let candidates: [Candidate.Fit]
 
         /// Growth ratios T(nᵢ₊₁)/T(nᵢ) for consecutive size pairs.
         ///
@@ -57,7 +57,7 @@ extension Test.Benchmark.Complexity {
 
         public init(
             exponent: Exponent,
-            candidates: [CandidateFit],
+            candidates: [Candidate.Fit],
             growthRatios: [Double],
             monotonicity: Test.Benchmark.Trend,
             points: [(size: Int, metric: Duration)],

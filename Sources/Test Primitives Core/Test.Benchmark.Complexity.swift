@@ -23,7 +23,7 @@ extension Test.Benchmark {
     ///
     /// - ``Class``: Named asymptotic complexity classes.
     /// - ``Exponent``: Continuous effective exponent from log-log regression.
-    /// - ``CandidateFit``: Per-class regression fit result.
+    /// - ``Candidate/Fit``: Per-class regression fit result.
     /// - ``Evidence``: Complete analytical evidence from measured data.
     public enum Complexity {}
 }

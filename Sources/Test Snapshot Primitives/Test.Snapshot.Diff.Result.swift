@@ -1,11 +1,11 @@
 //
-//  Test.Snapshot.DiffResult.swift
+//  Test.Snapshot.Diff.Result.swift
 //  swift-test-primitives
 //
 //  Structured difference description.
 //
 
-extension Test.Snapshot {
+extension Test.Snapshot.Diff {
     /// Result of comparing two values.
     ///
     /// Contains both a summary message and optionally a structured unified diff
@@ -14,7 +14,7 @@ extension Test.Snapshot {
     /// ## Example
     ///
     /// ```swift
-    /// let diff = Test.Snapshot.DiffResult(
+    /// let diff = Test.Snapshot.Diff.Result(
     ///     summary: "3 lines differ",
     ///     unifiedDiff: .init([
     ///         .init("@@ -1,3 +1,3 @@", style: .secondary),
@@ -24,7 +24,7 @@ extension Test.Snapshot {
     ///     ])
     /// )
     /// ```
-    public struct DiffResult: Sendable, Hashable, Codable {
+    public struct Result: Sendable, Hashable, Codable {
         /// A brief summary of the difference.
         ///
         /// Example: "3 lines differ", "Binary content differs at offset 42"
@@ -62,7 +62,7 @@ extension Test.Snapshot {
 
 // MARK: - CustomStringConvertible
 
-extension Test.Snapshot.DiffResult: CustomStringConvertible {
+extension Test.Snapshot.Diff.Result: CustomStringConvertible {
     public var description: String {
         if let diff = unifiedDiff {
             return "\(summary)\n\(diff.plainText)"

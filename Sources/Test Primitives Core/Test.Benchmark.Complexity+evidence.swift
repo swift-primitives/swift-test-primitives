@@ -70,7 +70,7 @@ extension Test.Benchmark.Complexity {
 
         // 2. Per-class OLS: T = slope·f(n) + intercept, plus effective exponent.
         let seconds = valid.map(\.seconds)
-        var candidates: [CandidateFit] = []
+        var candidates: [Candidate.Fit] = []
         for cls in classes {
             let transformed = valid.map { cls.transform(Double($0.size)) }
             let fit = Sample.Regression.linear(x: transformed, y: seconds)
@@ -97,7 +97,7 @@ extension Test.Benchmark.Complexity {
                 effectiveExp = cls.theoreticalExponent ?? 0
             }
 
-            candidates.append(CandidateFit(
+            candidates.append(Candidate.Fit(
                 complexity: cls,
                 regression: fit,
                 effectiveExponent: effectiveExp

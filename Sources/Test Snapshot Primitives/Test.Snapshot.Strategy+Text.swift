@@ -17,7 +17,7 @@ extension Test.Snapshot.Diffing where Format == String {
             fromBytes: { String(decoding: $0, as: UTF8.self) },
             diff: { old, new in
                 guard old != new else { return nil }
-                return Test.Snapshot.DiffResult(summary: "Text content differs")
+                return Test.Snapshot.Diff.Result(summary: "Text content differs")
             }
         )
     }
@@ -50,7 +50,7 @@ extension Test.Snapshot.Diffing where Format == String {
 
                 let styledDiff = Test.Snapshot.styledDiff(oldLines, newLines)
 
-                return Test.Snapshot.DiffResult(
+                return Test.Snapshot.Diff.Result(
                     summary: summary,
                     unifiedDiff: styledDiff
                 )
