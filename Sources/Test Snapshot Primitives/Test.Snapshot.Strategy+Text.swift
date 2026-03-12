@@ -48,7 +48,7 @@ extension Test.Snapshot.Diffing where Format == String {
                     summary = "\(removed) line\(removed == .one ? "" : "s") removed, \(added) line\(added == .one ? "" : "s") added"
                 }
 
-                let styledDiff = Test.Snapshot.styledDiff(oldLines, newLines)
+                let styledDiff = Test.Snapshot.Diff.styled(oldLines, newLines)
 
                 return Test.Snapshot.Diff.Result(
                     summary: summary,

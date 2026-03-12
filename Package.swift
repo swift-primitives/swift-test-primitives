@@ -36,6 +36,7 @@ let package = Package(
         .package(path: "../swift-sequence-primitives"),
         .package(path: "../swift-sample-primitives"),
         .package(path: "../swift-numeric-primitives"),
+        .package(path: "../swift-time-primitives"),
         .package(path: "../swift-witness-primitives"),
     ],
     targets: [
@@ -47,6 +48,7 @@ let package = Package(
                 .product(name: "Source Primitives", package: "swift-source-primitives"),
                 .product(name: "Sample Primitives", package: "swift-sample-primitives"),
                 .product(name: "Real Primitives", package: "swift-numeric-primitives"),
+                .product(name: "Time Primitives", package: "swift-time-primitives"),
             ]
         ),
 

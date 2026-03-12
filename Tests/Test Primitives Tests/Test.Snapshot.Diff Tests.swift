@@ -81,10 +81,10 @@ extension TestSnapshotDiffTests.Unit {
     }
 
     @Test
-    func `styledDiff produces styled text`() {
+    func `Diff styled produces styled text`() {
         let old = ["hello", "world"]
         let new = ["hello", "earth"]
-        let text = SUT.Snapshot.styledDiff(old, new)
+        let text = SUT.Snapshot.Diff.styled(old, new)
         #expect(!text.isEmpty)
         let styles = Set(text.segments.map(\.style))
         #expect(styles.contains(.diffRemoved) || styles.contains(.diffAdded))

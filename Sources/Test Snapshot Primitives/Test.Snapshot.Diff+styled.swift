@@ -1,11 +1,11 @@
 //
-//  Test.Snapshot.Diff.swift
+//  Test.Snapshot.Diff+styled.swift
 //  swift-test-primitives
 //
 //  Styled diff output bridge to Test.Text.
 //
 
-extension Test.Snapshot {
+extension Test.Snapshot.Diff {
     /// Generates styled ``Test/Text`` from line differences.
     ///
     /// Uses ``Test/Text/Segment/Style/diffAdded``, ``Test/Text/Segment/Style/diffRemoved``,
@@ -16,7 +16,7 @@ extension Test.Snapshot {
     ///   - new: New lines.
     ///   - contextLines: Number of context lines around changes.
     /// - Returns: Styled text representing the unified diff.
-    public static func styledDiff(
+    public static func styled(
         _ old: [String],
         _ new: [String],
         contextLines: Cardinal = 3
