@@ -7,125 +7,72 @@
 
 extension Test.Event {
     /// Categories of events that occur during testing.
-    public enum Kind: Sendable, Hashable, Codable {
-        // MARK: - Run Lifecycle
-
-        /// The test run started.
-        case runStarted
-
-        /// The execution plan was created.
-        case planCreated
-
-        /// The test run ended.
-        case runEnded
-
-        // MARK: - Test Lifecycle
-
-        /// A test started executing.
-        case testStarted
-
-        /// A test case started (for parameterized tests).
-        case caseStarted(Test.Case)
-
-        /// A test case ended.
-        case caseEnded(Test.Case)
-
-        /// A test ended.
-        ///
-        /// - Parameter result: The test result.
-        case testEnded(Result)
-
-        /// A test was skipped.
-        ///
-        /// - Parameter reason: Why the test was skipped.
-        case testSkipped(Test.Text?)
-
-        // MARK: - Assertions
-
-        /// An expectation was checked.
-        ///
-        /// - Parameter expectation: The evaluated expectation.
-        case expectationChecked(Test.Expectation)
-
-        // MARK: - Issues
-
-        /// An issue was recorded.
-        ///
-        /// - Parameter issue: The recorded issue.
-        case issueRecorded(Test.Issue)
-
-        // MARK: - Custom
-
-        /// A custom event for framework extensions.
-        ///
-        /// - Parameters:
-        ///   - name: The event name.
-        ///   - payload: Optional string payload.
-        case custom(name: String, payload: String?)
-    }
+    ///
+    /// `Kind` is a `Tagged` string discriminant, enabling extensibility.
+    /// New event kinds can be added from any layer via constrained extension
+    /// without modifying this file.
+    ///
+    /// ## Extensibility
+    ///
+    /// ```swift
+    /// extension Tagged where Tag == Test.Event, RawValue == Swift.String {
+    ///     public static let myCustomKind = Self(__unchecked: (), "myCustomKind")
+    /// }
+    /// ```
+    public typealias Kind = Tagged<Test.Event, Swift.String>
 }
 
-// MARK: - Result
+// MARK: - Known Kinds
 
-extension Test.Event {
-    /// The result of a test execution.
-    public enum Result: Sendable, Hashable, Codable {
-        /// The test passed.
-        case passed
+extension Tagged where Tag == Test.Event, RawValue == Swift.String {
 
-        /// The test failed.
-        case failed
+    // MARK: - Run Lifecycle
 
-        /// The test was skipped.
-        case skipped
-    }
-}
+    /// The test run started.
+    public static let runStarted = Self(__unchecked: (), "runStarted")
 
-// MARK: - CustomStringConvertible
+    /// The execution plan was created.
+    public static let planCreated = Self(__unchecked: (), "planCreated")
 
-extension Test.Event.Kind: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .runStarted:
-            return "runStarted"
+    /// The test run ended.
+    public static let runEnded = Self(__unchecked: (), "runEnded")
 
-        case .planCreated:
-            return "planCreated"
+    // MARK: - Test Lifecycle
 
-        case .runEnded:
-            return "runEnded"
+    /// A test started executing.
+    public static let testStarted = Self(__unchecked: (), "testStarted")
 
-        case .testStarted:
-            return "testStarted"
+    /// A test case started (for parameterized tests).
+    ///
+    /// The test case is available via ``Test/Event/testCase``.
+    public static let caseStarted = Self(__unchecked: (), "caseStarted")
 
-        case .caseStarted(let testCase):
-            return "caseStarted(\(testCase.arguments))"
+    /// A test case ended.
+    ///
+    /// The test case is available via ``Test/Event/testCase``.
+    public static let caseEnded = Self(__unchecked: (), "caseEnded")
 
-        case .caseEnded(let testCase):
-            return "caseEnded(\(testCase.arguments))"
+    /// A test ended.
+    ///
+    /// The result is available via ``Test/Event/result``.
+    public static let testEnded = Self(__unchecked: (), "testEnded")
 
-        case .testEnded(let result):
-            return "testEnded(\(result))"
+    /// A test was skipped.
+    ///
+    /// The skip reason is available via ``Test/Event/reason``.
+    public static let testSkipped = Self(__unchecked: (), "testSkipped")
 
-        case .testSkipped(let reason):
-            if let reason {
-                return "testSkipped(\(reason.plainText))"
-            } else {
-                return "testSkipped"
-            }
+    // MARK: - Assertions
 
-        case .expectationChecked(let expectation):
-            return "expectationChecked(\(expectation.isPassing ? "passed" : "failed"))"
+    /// An expectation was checked.
+    ///
+    /// The expectation is available via ``Test/Event/expectation``.
+    public static let expectationChecked = Self(__unchecked: (), "expectationChecked")
 
-        case .issueRecorded(let issue):
-            return "issueRecorded(\(issue.kind))"
+    // MARK: - Issues
 
-        case .custom(let name, let payload):
-            if let payload {
-                return "custom(\(name): \(payload))"
-            } else {
-                return "custom(\(name))"
-            }
-        }
-    }
+    /// An issue was recorded.
+    ///
+    /// The issue is available via ``Test/Event/issue``.
+    public static let issueRecorded = Self(__unchecked: (), "issueRecorded")
 }

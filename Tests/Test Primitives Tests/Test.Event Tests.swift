@@ -19,6 +19,11 @@ extension TestEventTests.Unit {
         #expect(event.id == nil)
         #expect(event.caseID == nil)
         #expect(event.elapsed == nil)
+        #expect(event.result == nil)
+        #expect(event.testCase == nil)
+        #expect(event.reason == nil)
+        #expect(event.expectation == nil)
+        #expect(event.issue == nil)
     }
 
     @Test
@@ -52,18 +57,19 @@ extension TestEventTests.Unit {
     func `testStarted and testEnded kinds`() {
         let id = SUT.ID.stub("test1")
         let start = SUT.Event(id: id, kind: .testStarted)
-        let end = SUT.Event(id: id, kind: .testEnded(.passed))
+        let end = SUT.Event(id: id, kind: .testEnded, result: .passed)
         #expect(start.description.count > 0)
         #expect(end.description.count > 0)
+        #expect(end.result == .passed)
     }
 
     @Test
     func `caseStarted and caseEnded kinds`() {
         let testCase = SUT.Case(id: 1, arguments: "(x: 1)")
-        let start = SUT.Event(kind: .caseStarted(testCase))
-        let end = SUT.Event(kind: .caseEnded(testCase))
-        #expect(start.description.count > 0)
-        #expect(end.description.count > 0)
+        let start = SUT.Event(kind: .caseStarted, testCase: testCase)
+        let end = SUT.Event(kind: .caseEnded, testCase: testCase)
+        #expect(start.testCase?.arguments == "(x: 1)")
+        #expect(end.testCase?.arguments == "(x: 1)")
     }
 
     @Test
@@ -73,21 +79,30 @@ extension TestEventTests.Unit {
             expression: .init(id: 1, sourceCode: "true", sourceLocation: .stub()),
             isPassing: true
         )
-        let event = SUT.Event(kind: .expectationChecked(expectation))
-        #expect(event.description.count > 0)
+        let event = SUT.Event(kind: .expectationChecked, expectation: expectation)
+        #expect(event.expectation?.isPassing == true)
     }
 
     @Test
     func `issueRecorded kind`() {
         let issue = SUT.Issue(kind: .unconditional("fail"))
-        let event = SUT.Event(kind: .issueRecorded(issue))
-        #expect(event.description.count > 0)
+        let event = SUT.Event(kind: .issueRecorded, issue: issue)
+        #expect(event.issue != nil)
     }
 
     @Test
-    func `custom kind`() {
-        let event = SUT.Event(kind: .custom(name: "metric", payload: "42"))
-        #expect(event.description.count > 0)
+    func `extensible kind via rawValue`() {
+        let custom = SUT.Event.Kind(__unchecked: (), "metric")
+        let event = SUT.Event(kind: custom)
+        #expect(event.kind.rawValue == "metric")
+        #expect(event.kind == custom)
+    }
+
+    @Test
+    func `Kind equality`() {
+        #expect(SUT.Event.Kind.runStarted == .runStarted)
+        #expect(SUT.Event.Kind.runStarted != .runEnded)
+        #expect(SUT.Event.Kind.testEnded != .testStarted)
     }
 }
 
@@ -99,23 +114,26 @@ extension TestEventTests.EdgeCase {
         let original = SUT.Event(kind: .runStarted)
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
-        // Event is not Equatable — compare properties
         #expect(decoded.id == original.id)
         #expect(decoded.caseID == original.caseID)
         #expect(decoded.elapsed == original.elapsed)
+        #expect(decoded.kind == original.kind)
     }
 
     @Test
     func `codable round-trip for event with test ID`() throws {
         let original = SUT.Event(
             id: .stub("t"), caseID: 3,
-            kind: .testEnded(.failed), elapsed: .milliseconds(500)
+            kind: .testEnded, elapsed: .milliseconds(500),
+            result: .failed
         )
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
         #expect(decoded.id == original.id)
         #expect(decoded.caseID == original.caseID)
         #expect(decoded.elapsed == original.elapsed)
+        #expect(decoded.kind == .testEnded)
+        #expect(decoded.result == SUT.Event.Result.failed)
     }
 
     @Test
@@ -130,11 +148,11 @@ extension TestEventTests.EdgeCase {
     @Test
     func `codable round-trip for caseStarted kind`() throws {
         let testCase = SUT.Case(id: 1, arguments: "(x: 1)")
-        let original = SUT.Event(kind: .caseStarted(testCase))
+        let original = SUT.Event(kind: .caseStarted, testCase: testCase)
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
-        #expect(decoded.id == original.id)
-        #expect(decoded.caseID == original.caseID)
+        #expect(decoded.kind == .caseStarted)
+        #expect(decoded.testCase?.arguments == "(x: 1)")
     }
 
     @Test
@@ -144,10 +162,11 @@ extension TestEventTests.EdgeCase {
             expression: .init(id: 1, sourceCode: "x == 42", sourceLocation: .stub()),
             isPassing: true
         )
-        let original = SUT.Event(kind: .expectationChecked(expectation))
+        let original = SUT.Event(kind: .expectationChecked, expectation: expectation)
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
-        #expect(decoded.id == original.id)
+        #expect(decoded.kind == .expectationChecked)
+        #expect(decoded.expectation?.isPassing == true)
     }
 
     @Test
@@ -157,25 +176,43 @@ extension TestEventTests.EdgeCase {
             sourceLocation: .stub(line: 42),
             isKnown: true
         )
-        let original = SUT.Event(kind: .issueRecorded(issue))
+        let original = SUT.Event(kind: .issueRecorded, issue: issue)
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
-        #expect(decoded.id == original.id)
+        #expect(decoded.kind == .issueRecorded)
+        #expect(decoded.issue?.isKnown == true)
     }
 
     @Test
-    func `codable round-trip for custom kind`() throws {
-        let original = SUT.Event(kind: .custom(name: "metric", payload: "42"))
+    func `codable round-trip for extensible kind`() throws {
+        let original = SUT.Event(kind: .init(__unchecked: (), "metric"))
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
-        #expect(decoded.id == original.id)
+        #expect(decoded.kind.rawValue == "metric")
     }
 
     @Test
     func `codable round-trip for testSkipped kind`() throws {
-        let original = SUT.Event(kind: .testSkipped("not ready"))
+        let original = SUT.Event(kind: .testSkipped, reason: "not ready")
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
-        #expect(decoded.id == original.id)
+        #expect(decoded.kind == .testSkipped)
+        #expect(decoded.reason?.plainText == "not ready")
+    }
+
+    @Test
+    func `Kind codable round-trip`() throws {
+        let kinds: [SUT.Event.Kind] = [
+            .runStarted, .planCreated, .runEnded,
+            .testStarted, .testEnded, .testSkipped,
+            .caseStarted, .caseEnded,
+            .expectationChecked, .issueRecorded,
+            .init(__unchecked: (), "custom"),
+        ]
+        for kind in kinds {
+            let data = try JSONEncoder().encode(kind)
+            let decoded = try JSONDecoder().decode(SUT.Event.Kind.self, from: data)
+            #expect(decoded == kind)
+        }
     }
 }

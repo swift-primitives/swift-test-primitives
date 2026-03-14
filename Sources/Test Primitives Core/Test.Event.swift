@@ -43,6 +43,23 @@ extension Test {
         /// the run hasn't started yet or timing is unavailable.
         public let elapsed: Duration?
 
+        // MARK: - Kind-Associated Data
+
+        /// The test result, present when kind is `.testEnded`.
+        public let result: Result?
+
+        /// The test case, present when kind is `.caseStarted` or `.caseEnded`.
+        public let testCase: Test.Case?
+
+        /// The skip reason, present when kind is `.testSkipped`.
+        public let reason: Test.Text?
+
+        /// The expectation, present when kind is `.expectationChecked`.
+        public let expectation: Test.Expectation?
+
+        /// The issue, present when kind is `.issueRecorded`.
+        public let issue: Test.Issue?
+
         /// Creates an event.
         ///
         /// - Parameters:
@@ -50,16 +67,31 @@ extension Test {
         ///   - caseID: The case ID, if applicable.
         ///   - kind: The event kind.
         ///   - elapsed: Duration since run started.
+        ///   - result: The test result (for `.testEnded`).
+        ///   - testCase: The test case (for `.caseStarted`/`.caseEnded`).
+        ///   - reason: The skip reason (for `.testSkipped`).
+        ///   - expectation: The expectation (for `.expectationChecked`).
+        ///   - issue: The issue (for `.issueRecorded`).
         public init(
             id: Test.ID? = nil,
             caseID: Test.Case.ID? = nil,
             kind: Kind,
-            elapsed: Duration? = nil
+            elapsed: Duration? = nil,
+            result: Result? = nil,
+            testCase: Test.Case? = nil,
+            reason: Test.Text? = nil,
+            expectation: Test.Expectation? = nil,
+            issue: Test.Issue? = nil
         ) {
             self.id = id
             self.caseID = caseID
             self.kind = kind
             self.elapsed = elapsed
+            self.result = result
+            self.testCase = testCase
+            self.reason = reason
+            self.expectation = expectation
+            self.issue = issue
         }
     }
 }
@@ -79,6 +111,22 @@ extension Test.Event: CustomStringConvertible {
         }
 
         parts.append(kind.description)
+
+        if let result {
+            parts.append("\(result)")
+        }
+        if let testCase {
+            parts.append(testCase.arguments)
+        }
+        if let reason {
+            parts.append(reason.plainText)
+        }
+        if let expectation {
+            parts.append(expectation.isPassing ? "passed" : "failed")
+        }
+        if let issue {
+            parts.append("\(issue.kind)")
+        }
 
         if let elapsed {
             parts.append("@\(elapsed)")
