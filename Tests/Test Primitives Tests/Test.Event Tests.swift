@@ -91,6 +91,22 @@ extension TestEventTests.Unit {
     }
 
     @Test
+    func `payload round-trip`() {
+        let event = SUT.Event(
+            kind: .init(__unchecked: (), "performanceDiagnostic"),
+            payload: "{\"metric\":\"median\"}"
+        )
+        #expect(event.payload == "{\"metric\":\"median\"}")
+        #expect(event.description.contains("payload:"))
+    }
+
+    @Test
+    func `payload defaults to nil`() {
+        let event = SUT.Event(kind: .runStarted)
+        #expect(event.payload == nil)
+    }
+
+    @Test
     func `extensible kind via rawValue`() {
         let custom = SUT.Event.Kind(__unchecked: (), "metric")
         let event = SUT.Event(kind: custom)
@@ -181,6 +197,18 @@ extension TestEventTests.EdgeCase {
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
         #expect(decoded.kind == .issueRecorded)
         #expect(decoded.issue?.isKnown == true)
+    }
+
+    @Test
+    func `codable round-trip for event with payload`() throws {
+        let original = SUT.Event(
+            kind: .init(__unchecked: (), "performanceDiagnostic"),
+            payload: "{\"test\":\"data\"}"
+        )
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
+        #expect(decoded.kind.rawValue == "performanceDiagnostic")
+        #expect(decoded.payload == "{\"test\":\"data\"}")
     }
 
     @Test

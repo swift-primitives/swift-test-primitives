@@ -60,6 +60,14 @@ extension Test {
         /// The issue, present when kind is `.issueRecorded`.
         public let issue: Test.Issue?
 
+        /// Extensible payload for higher-layer event kinds.
+        ///
+        /// L1 known kinds use typed properties (result, expectation, etc.).
+        /// L3 extensible kinds carry serialized data (e.g. JSON) in payload.
+        /// The kind is first-class via Tagged — payload is additional data,
+        /// not a kind identifier.
+        public let payload: Swift.String?
+
         /// Creates an event.
         ///
         /// - Parameters:
@@ -72,6 +80,7 @@ extension Test {
         ///   - reason: The skip reason (for `.testSkipped`).
         ///   - expectation: The expectation (for `.expectationChecked`).
         ///   - issue: The issue (for `.issueRecorded`).
+        ///   - payload: Extensible payload for higher-layer event kinds.
         public init(
             id: Test.ID? = nil,
             caseID: Test.Case.ID? = nil,
@@ -81,7 +90,8 @@ extension Test {
             testCase: Test.Case? = nil,
             reason: Test.Text? = nil,
             expectation: Test.Expectation? = nil,
-            issue: Test.Issue? = nil
+            issue: Test.Issue? = nil,
+            payload: Swift.String? = nil
         ) {
             self.id = id
             self.caseID = caseID
@@ -92,6 +102,7 @@ extension Test {
             self.reason = reason
             self.expectation = expectation
             self.issue = issue
+            self.payload = payload
         }
     }
 }
@@ -126,6 +137,13 @@ extension Test.Event: CustomStringConvertible {
         }
         if let issue {
             parts.append("\(issue.kind)")
+        }
+
+        if let payload {
+            let truncated = payload.count > 64
+                ? Swift.String(payload.prefix(64)) + "…"
+                : payload
+            parts.append("payload:\(truncated)")
         }
 
         if let elapsed {
