@@ -1,5 +1,5 @@
 //
-//  Test.Snapshot.Diff.Result.StructuralOperation.swift
+//  Test.Snapshot.Diff.Result.Operation.swift
 //  swift-test-primitives
 //
 //  Format-agnostic representation of a structural change.
@@ -23,7 +23,7 @@ extension Test.Snapshot.Diff.Result {
     ///     ]
     /// )
     /// ```
-    public enum StructuralOperation: Sendable, Hashable, Codable {
+    public enum Operation: Sendable, Hashable, Codable {
         /// A value was added at the given path.
         case added(path: Swift.String, value: Swift.String)
 

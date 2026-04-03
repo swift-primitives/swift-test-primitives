@@ -40,7 +40,7 @@ extension Test.Snapshot.Diff {
         ///
         /// Present when the diffing strategy produces semantic, tree-aware
         /// comparisons (e.g., structural JSON diff). `nil` for line-based diffs.
-        public let structuralOperations: [StructuralOperation]?
+        public let structuralOperations: [Operation]?
 
         /// Creates a diff result.
         ///
@@ -51,7 +51,7 @@ extension Test.Snapshot.Diff {
         public init(
             summary: String,
             unifiedDiff: Test.Text? = nil,
-            structuralOperations: [StructuralOperation]? = nil
+            structuralOperations: [Operation]? = nil
         ) {
             self.summary = summary
             self.unifiedDiff = unifiedDiff
