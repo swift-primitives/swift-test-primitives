@@ -51,7 +51,7 @@ extension Test {
         ///   - string: Text content (encoded as UTF-8).
         public init(name: Swift.String, string: Swift.String) {
             self.name = name
-            self.bytes = Swift.Array(string.utf8)
+            self.bytes = Array(string.utf8)
             self.contentType = "text/plain"
         }
     }
