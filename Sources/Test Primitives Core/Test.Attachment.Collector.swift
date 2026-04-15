@@ -27,7 +27,18 @@ extension Test.Attachment {
     ///     ciSystem.upload(attachment.name, data: attachment.bytes)
     /// }
     /// ```
-    public final class Collector: @unchecked Sendable {
+    /// ## Safety Invariant
+    ///
+    /// Internal `Mutex<[Test.Attachment]>` serializes all access.
+    ///
+    /// ## Intended Use
+    ///
+    /// - Collecting test attachments for CI upload.
+    ///
+    /// ## Non-Goals
+    ///
+    /// - Not a general-purpose collection; test infrastructure only.
+    public final class Collector: @unsafe @unchecked Sendable {
         private let _storage = Mutex<[Test.Attachment]>([])
 
         public init() {}
