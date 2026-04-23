@@ -30,7 +30,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../swift-identity-primitives"),
+        .package(path: "../swift-tagged-primitives"),
         .package(path: "../swift-source-primitives"),
         .package(path: "../swift-async-primitives"),
         .package(path: "../swift-sequence-primitives"),
@@ -44,7 +44,7 @@ let package = Package(
         .target(
             name: "Test Primitives Core",
             dependencies: [
-                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
                 .product(name: "Source Primitives", package: "swift-source-primitives"),
                 .product(name: "Sample Primitives", package: "swift-sample-primitives"),
                 .product(name: "Real Primitives", package: "swift-numeric-primitives"),
@@ -90,8 +90,8 @@ let package = Package(
             dependencies: [
                 "Test Primitives",
                 .product(
-                    name: "Identity Primitives Test Support",
-                    package: "swift-identity-primitives"
+                    name: "Tagged Primitives Test Support",
+                    package: "swift-tagged-primitives"
                 ),
             ],
             path: "Tests/Support"
