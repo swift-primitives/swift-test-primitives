@@ -27,11 +27,6 @@ jobs:
   docs:
     uses: swift-institute/.github/.github/workflows/swift-docs.yml@main
     with:
-      umbrella-module: Test_Primitives
-      umbrella-display-name: "Test Primitives"
-      umbrella-bundle-id: "swift-test-primitives.Test-Primitives"
-      umbrella-docc-path: "Sources/Test Primitives/Test Primitives.docc"
-      exclude-modules: "Test_Primitives_Test_Support"
       enable-private-repos: true
     secrets:
       PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
