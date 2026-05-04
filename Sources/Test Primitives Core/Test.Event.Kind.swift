@@ -5,6 +5,8 @@
 //  Event categories.
 //
 
+import Tagged_Primitives_Standard_Library_Integration
+
 extension Test.Event {
     /// Categories of events that occur during testing.
     ///
@@ -15,8 +17,8 @@ extension Test.Event {
     /// ## Extensibility
     ///
     /// ```swift
-    /// extension Tagged where Tag == Test.Event, RawValue == Swift.String {
-    ///     public static let myCustomKind = Self(__unchecked: (), "myCustomKind")
+    /// extension Tagged where Tag == Test.Event, Underlying == Swift.String {
+    ///     public static let myCustomKind: Self = "myCustomKind"
     /// }
     /// ```
     public typealias Kind = Tagged<Test.Event, Swift.String>
@@ -24,55 +26,55 @@ extension Test.Event {
 
 // MARK: - Known Kinds
 
-extension Tagged where Tag == Test.Event, RawValue == Swift.String {
+extension Tagged where Tag == Test.Event, Underlying == Swift.String {
 
     // MARK: - Run Lifecycle
 
     /// The test run started.
-    public static let runStarted = Self(__unchecked: (), "runStarted")
+    public static let runStarted: Self = "runStarted"
 
     /// The execution plan was created.
-    public static let planCreated = Self(__unchecked: (), "planCreated")
+    public static let planCreated: Self = "planCreated"
 
     /// The test run ended.
-    public static let runEnded = Self(__unchecked: (), "runEnded")
+    public static let runEnded: Self = "runEnded"
 
     // MARK: - Test Lifecycle
 
     /// A test started executing.
-    public static let testStarted = Self(__unchecked: (), "testStarted")
+    public static let testStarted: Self = "testStarted"
 
     /// A test case started (for parameterized tests).
     ///
     /// The test case is available via ``Test/Event/testCase``.
-    public static let caseStarted = Self(__unchecked: (), "caseStarted")
+    public static let caseStarted: Self = "caseStarted"
 
     /// A test case ended.
     ///
     /// The test case is available via ``Test/Event/testCase``.
-    public static let caseEnded = Self(__unchecked: (), "caseEnded")
+    public static let caseEnded: Self = "caseEnded"
 
     /// A test ended.
     ///
     /// The result is available via ``Test/Event/result``.
-    public static let testEnded = Self(__unchecked: (), "testEnded")
+    public static let testEnded: Self = "testEnded"
 
     /// A test was skipped.
     ///
     /// The skip reason is available via ``Test/Event/reason``.
-    public static let testSkipped = Self(__unchecked: (), "testSkipped")
+    public static let testSkipped: Self = "testSkipped"
 
     // MARK: - Assertions
 
     /// An expectation was checked.
     ///
     /// The expectation is available via ``Test/Event/expectation``.
-    public static let expectationChecked = Self(__unchecked: (), "expectationChecked")
+    public static let expectationChecked: Self = "expectationChecked"
 
     // MARK: - Issues
 
     /// An issue was recorded.
     ///
     /// The issue is available via ``Test/Event/issue``.
-    public static let issueRecorded = Self(__unchecked: (), "issueRecorded")
+    public static let issueRecorded: Self = "issueRecorded"
 }

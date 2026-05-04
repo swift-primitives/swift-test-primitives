@@ -46,7 +46,7 @@ extension Test.Issue.Kind: CustomStringConvertible {
             return "Unconditional failure: \(message.plainText)"
 
         case .expectationFailed(let id):
-            return "Expectation failed (id: \(id.rawValue))"
+            return "Expectation failed (id: \(id.underlying))"
 
         case .confirmationMiscounted(let actual, let expected):
             return "Confirmation miscounted: expected \(expected), got \(actual)"

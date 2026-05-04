@@ -118,7 +118,7 @@ extension Test.Event: CustomStringConvertible {
         }
 
         if let caseID {
-            parts.append("case:\(caseID.rawValue)")
+            parts.append("case:\(caseID.underlying)")
         }
 
         parts.append(kind.description)

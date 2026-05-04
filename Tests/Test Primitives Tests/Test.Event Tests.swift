@@ -93,7 +93,7 @@ extension TestEventTests.Unit {
     @Test
     func `payload round-trip`() {
         let event = SUT.Event(
-            kind: .init(__unchecked: (), "performanceDiagnostic"),
+            kind: .init(_unchecked:"performanceDiagnostic"),
             payload: "{\"metric\":\"median\"}"
         )
         #expect(event.payload == "{\"metric\":\"median\"}")
@@ -108,9 +108,9 @@ extension TestEventTests.Unit {
 
     @Test
     func `extensible kind via rawValue`() {
-        let custom = SUT.Event.Kind(__unchecked: (), "metric")
+        let custom = SUT.Event.Kind(_unchecked:"metric")
         let event = SUT.Event(kind: custom)
-        #expect(event.kind.rawValue == "metric")
+        #expect(event.kind.underlying == "metric")
         #expect(event.kind == custom)
     }
 
@@ -202,21 +202,21 @@ extension TestEventTests.EdgeCase {
     @Test
     func `codable round-trip for event with payload`() throws {
         let original = SUT.Event(
-            kind: .init(__unchecked: (), "performanceDiagnostic"),
+            kind: .init(_unchecked:"performanceDiagnostic"),
             payload: "{\"test\":\"data\"}"
         )
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
-        #expect(decoded.kind.rawValue == "performanceDiagnostic")
+        #expect(decoded.kind.underlying == "performanceDiagnostic")
         #expect(decoded.payload == "{\"test\":\"data\"}")
     }
 
     @Test
     func `codable round-trip for extensible kind`() throws {
-        let original = SUT.Event(kind: .init(__unchecked: (), "metric"))
+        let original = SUT.Event(kind: .init(_unchecked:"metric"))
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
-        #expect(decoded.kind.rawValue == "metric")
+        #expect(decoded.kind.underlying == "metric")
     }
 
     @Test
@@ -235,7 +235,7 @@ extension TestEventTests.EdgeCase {
             .testStarted, .testEnded, .testSkipped,
             .caseStarted, .caseEnded,
             .expectationChecked, .issueRecorded,
-            .init(__unchecked: (), "custom"),
+            .init(_unchecked:"custom"),
         ]
         for kind in kinds {
             let data = try JSONEncoder().encode(kind)
