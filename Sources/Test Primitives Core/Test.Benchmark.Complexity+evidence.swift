@@ -5,8 +5,8 @@
 //  Pure-math evidence construction from measured data points.
 //
 
-import Sample_Primitives
 import Real_Primitives
+import Sample_Primitives
 
 extension Test.Benchmark.Complexity {
     /// Constructs analytical evidence from measured data points.
@@ -46,7 +46,10 @@ extension Test.Benchmark.Complexity {
         // Edge case: insufficient data for regression.
         guard valid.count >= 2 else {
             let emptyFit = Sample.Regression.Fit(
-                slope: 0, intercept: 0, rSquared: 0, meanSquaredError: 0
+                slope: 0,
+                intercept: 0,
+                rSquared: 0,
+                meanSquaredError: 0
             )
             return Evidence(
                 exponent: Exponent(value: 0, coefficient: 0, fit: emptyFit),
@@ -89,19 +92,22 @@ extension Test.Benchmark.Complexity {
             }
             let effectiveExp: Double
             if logTransformsForExp.count >= 2 {
-                effectiveExp = Sample.Regression.linear(
-                    x: logSizesForExp,
-                    y: logTransformsForExp
-                ).slope
+                effectiveExp =
+                    Sample.Regression.linear(
+                        x: logSizesForExp,
+                        y: logTransformsForExp
+                    ).slope
             } else {
                 effectiveExp = cls.theoreticalExponent ?? 0
             }
 
-            candidates.append(Candidate.Fit(
-                complexity: cls,
-                regression: fit,
-                effectiveExponent: effectiveExp
-            ))
+            candidates.append(
+                Candidate.Fit(
+                    complexity: cls,
+                    regression: fit,
+                    effectiveExponent: effectiveExp
+                )
+            )
         }
         candidates.sort { $0.regression.rSquared > $1.regression.rSquared }
 
@@ -121,7 +127,8 @@ extension Test.Benchmark.Complexity {
         do {
             let mean = seconds.reduce(0, +) / Double(seconds.count)
             if mean > 0 {
-                let variance = seconds.reduce(0.0) { $0 + ($1 - mean) * ($1 - mean) }
+                let variance =
+                    seconds.reduce(0.0) { $0 + ($1 - mean) * ($1 - mean) }
                     / Double(seconds.count - 1)
                 metricCV = variance.squareRoot() / mean
             } else {

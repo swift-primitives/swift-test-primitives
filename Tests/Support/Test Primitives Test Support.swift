@@ -79,4 +79,3 @@ extension Test.Trait {
         .timeLimit(duration)
     }
 }
-

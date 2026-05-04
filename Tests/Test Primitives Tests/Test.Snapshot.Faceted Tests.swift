@@ -1,5 +1,5 @@
-import Testing
 import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 
@@ -61,10 +61,13 @@ extension TestSnapshotFacetedTests.Unit {
             primary: .matched,
             facets: [
                 (name: "ok", result: .matched),
-                (name: "bad", result: .failed(
-                    diff: .init(summary: "diff"),
-                    referencePath: "/ref"
-                )),
+                (
+                    name: "bad",
+                    result: .failed(
+                        diff: .init(summary: "diff"),
+                        referencePath: "/ref"
+                    )
+                ),
             ]
         )
         #expect(!result.isPassing)

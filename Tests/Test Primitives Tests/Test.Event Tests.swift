@@ -1,6 +1,6 @@
-import Testing
-import Test_Primitives_Test_Support
 import Foundation
+import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 
@@ -30,8 +30,10 @@ extension TestEventTests.Unit {
     func `init with all parameters`() {
         let testID = SUT.ID.stub("myTest")
         let event = SUT.Event(
-            id: testID, caseID: 5,
-            kind: .testStarted, elapsed: .seconds(1)
+            id: testID,
+            caseID: 5,
+            kind: .testStarted,
+            elapsed: .seconds(1)
         )
         #expect(event.id == testID)
         #expect(event.caseID == 5)
@@ -93,7 +95,7 @@ extension TestEventTests.Unit {
     @Test
     func `payload round-trip`() {
         let event = SUT.Event(
-            kind: .init(_unchecked:"performanceDiagnostic"),
+            kind: .init(_unchecked: "performanceDiagnostic"),
             payload: "{\"metric\":\"median\"}"
         )
         #expect(event.payload == "{\"metric\":\"median\"}")
@@ -108,7 +110,7 @@ extension TestEventTests.Unit {
 
     @Test
     func `extensible kind via rawValue`() {
-        let custom = SUT.Event.Kind(_unchecked:"metric")
+        let custom = SUT.Event.Kind(_unchecked: "metric")
         let event = SUT.Event(kind: custom)
         #expect(event.kind.underlying == "metric")
         #expect(event.kind == custom)
@@ -139,8 +141,10 @@ extension TestEventTests.EdgeCase {
     @Test
     func `codable round-trip for event with test ID`() throws {
         let original = SUT.Event(
-            id: .stub("t"), caseID: 3,
-            kind: .testEnded, elapsed: .milliseconds(500),
+            id: .stub("t"),
+            caseID: 3,
+            kind: .testEnded,
+            elapsed: .milliseconds(500),
             result: .failed
         )
         let data = try JSONEncoder().encode(original)
@@ -202,7 +206,7 @@ extension TestEventTests.EdgeCase {
     @Test
     func `codable round-trip for event with payload`() throws {
         let original = SUT.Event(
-            kind: .init(_unchecked:"performanceDiagnostic"),
+            kind: .init(_unchecked: "performanceDiagnostic"),
             payload: "{\"test\":\"data\"}"
         )
         let data = try JSONEncoder().encode(original)
@@ -213,7 +217,7 @@ extension TestEventTests.EdgeCase {
 
     @Test
     func `codable round-trip for extensible kind`() throws {
-        let original = SUT.Event(kind: .init(_unchecked:"metric"))
+        let original = SUT.Event(kind: .init(_unchecked: "metric"))
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Event.self, from: data)
         #expect(decoded.kind.underlying == "metric")
@@ -235,7 +239,7 @@ extension TestEventTests.EdgeCase {
             .testStarted, .testEnded, .testSkipped,
             .caseStarted, .caseEnded,
             .expectationChecked, .issueRecorded,
-            .init(_unchecked:"custom"),
+            .init(_unchecked: "custom"),
         ]
         for kind in kinds {
             let data = try JSONEncoder().encode(kind)

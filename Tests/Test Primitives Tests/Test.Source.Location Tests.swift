@@ -1,6 +1,6 @@
-import Testing
-import Test_Primitives_Test_Support
 import Foundation
+import Test_Primitives_Test_Support
+import Testing
 
 @Suite("Source.Location")
 struct SourceLocationTests {
@@ -68,7 +68,10 @@ extension SourceLocationTests.EdgeCase {
     @Test
     func `codable round-trip preserves all fields`() throws {
         let original = Source.Location(
-            fileID: "M/F.swift", filePath: "/p", line: 42, column: 7
+            fileID: "M/F.swift",
+            filePath: "/p",
+            line: 42,
+            column: 7
         )
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(Source.Location.self, from: data)

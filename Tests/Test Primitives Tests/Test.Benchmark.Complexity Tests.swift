@@ -5,8 +5,8 @@
 //  Unit tests for complexity analysis primitives.
 //
 
-import Testing
 import Test_Primitives
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 
@@ -236,7 +236,7 @@ extension TestBenchmarkComplexityTests.EdgeCase {
     @Test
     func `single point returns degenerate evidence`() {
         let points: [(size: Int, metric: Duration)] = [
-            (size: 100, metric: Duration.milliseconds(10)),
+            (size: 100, metric: Duration.milliseconds(10))
         ]
 
         let evidence = SUT.Benchmark.Complexity.evidence(

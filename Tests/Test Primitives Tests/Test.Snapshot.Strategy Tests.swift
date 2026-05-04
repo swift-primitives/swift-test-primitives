@@ -1,5 +1,5 @@
-import Testing
 import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 
@@ -17,7 +17,8 @@ extension TestSnapshotStrategyTests.Unit {
     @Test
     func `sync strategy is synchronous`() {
         let strategy = SUT.Snapshot.Strategy<String, String>(
-            pathExtension: "txt", diffing: .text
+            pathExtension: "txt",
+            diffing: .text
         )
         #expect(strategy.isSynchronous)
     }
@@ -45,7 +46,8 @@ extension TestSnapshotStrategyTests.Unit {
     @Test
     func `async capture produces format`() async {
         let strategy = SUT.Snapshot.Strategy<String, String>(
-            pathExtension: "txt", diffing: .text
+            pathExtension: "txt",
+            diffing: .text
         )
         let result = await strategy.capture("hello")
         #expect(result == "hello")

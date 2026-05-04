@@ -1,6 +1,6 @@
-import Testing
-import Test_Primitives_Test_Support
 import Foundation
+import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 
@@ -27,7 +27,8 @@ extension TestSnapshotDiffResultTests.Unit {
             .init("+new", style: .diffAdded),
         ]
         let result = SUT.Snapshot.Diff.Result(
-            summary: "1 line changed", unifiedDiff: diff
+            summary: "1 line changed",
+            unifiedDiff: diff
         )
         #expect(result.summary == "1 line changed")
         #expect(result.unifiedDiff != nil)
@@ -50,7 +51,8 @@ extension TestSnapshotDiffResultTests.EdgeCase {
             .init("+added", style: .diffAdded),
         ]
         let original = SUT.Snapshot.Diff.Result(
-            summary: "1 change", unifiedDiff: diff
+            summary: "1 change",
+            unifiedDiff: diff
         )
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.Snapshot.Diff.Result.self, from: data)

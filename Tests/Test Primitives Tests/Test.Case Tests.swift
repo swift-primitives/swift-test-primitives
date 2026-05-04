@@ -1,6 +1,6 @@
-import Testing
-import Test_Primitives_Test_Support
 import Foundation
+import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 

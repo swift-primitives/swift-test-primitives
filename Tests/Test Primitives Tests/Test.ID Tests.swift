@@ -1,6 +1,6 @@
-import Testing
-import Test_Primitives_Test_Support
 import Foundation
+import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 
@@ -17,8 +17,10 @@ extension TestIDTests.Unit {
     func `init with suite stores all properties`() {
         let location = Source.Location.stub()
         let id = SUT.ID(
-            module: "MyModule", suite: "MySuite",
-            name: "testFoo", sourceLocation: location
+            module: "MyModule",
+            suite: "MySuite",
+            name: "testFoo",
+            sourceLocation: location
         )
         #expect(id.module == "MyModule")
         #expect(id.suite == "MySuite")
@@ -43,8 +45,10 @@ extension TestIDTests.Unit {
     @Test
     func `fullyQualifiedName includes suite when present`() {
         let id = SUT.ID(
-            module: "Mod", suite: "Suite",
-            name: "test", sourceLocation: .stub()
+            module: "Mod",
+            suite: "Suite",
+            name: "test",
+            sourceLocation: .stub()
         )
         #expect(id.fullyQualifiedName.contains("Suite"))
     }
@@ -56,7 +60,10 @@ extension TestIDTests.EdgeCase {
     @Test
     func `codable round-trip`() throws {
         let original = SUT.ID(
-            module: "M", suite: "S", name: "t", sourceLocation: .stub()
+            module: "M",
+            suite: "S",
+            name: "t",
+            sourceLocation: .stub()
         )
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(SUT.ID.self, from: data)

@@ -140,7 +140,8 @@ extension Test.Event: CustomStringConvertible {
         }
 
         if let payload {
-            let truncated = payload.count > 64
+            let truncated =
+                payload.count > 64
                 ? Swift.String(payload.prefix(64)) + "…"
                 : payload
             parts.append("payload:\(truncated)")

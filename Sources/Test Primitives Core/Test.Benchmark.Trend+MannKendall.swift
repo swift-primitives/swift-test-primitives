@@ -37,8 +37,7 @@ extension Test.Benchmark.Trend {
             for j in (i + 1)..<n {
                 let xj = averaging.project(durations[j])
                 let diff = xj - xi
-                if diff > 0 { s += 1 }
-                else if diff < 0 { s -= 1 }
+                if diff > 0 { s += 1 } else if diff < 0 { s -= 1 }
             }
         }
 

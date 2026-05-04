@@ -1,5 +1,5 @@
-import Testing
 import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 
@@ -82,7 +82,9 @@ extension TestSnapshotRedactionTests.Integration {
 
     @Test func `redacted strategy preserves path extension`() {
         let base = SUT.Snapshot.Strategy<String, String>(
-            pathExtension: "json", diffing: .lines, snapshot: { $0 }
+            pathExtension: "json",
+            diffing: .lines,
+            snapshot: { $0 }
         )
         let redacted = base.redacting(SUT.Snapshot.Redaction<String>(apply: { $0 }))
         #expect(redacted.pathExtension == "json")

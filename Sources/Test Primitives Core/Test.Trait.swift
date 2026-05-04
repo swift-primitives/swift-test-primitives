@@ -120,15 +120,19 @@ extension Test.Trait {
         baselineTolerance: Double? = nil,
         trackAllocations: Bool = false
     ) -> Self {
-        Self(kind: .timed(.init(
-            iteration: .init(count: iterations, warmup: warmup),
-            evaluation: .init(
-                threshold: threshold,
-                metric: metric,
-                baselineTolerance: baselineTolerance,
-                trackAllocations: trackAllocations
+        Self(
+            kind: .timed(
+                .init(
+                    iteration: .init(count: iterations, warmup: warmup),
+                    evaluation: .init(
+                        threshold: threshold,
+                        metric: metric,
+                        baselineTolerance: baselineTolerance,
+                        trackAllocations: trackAllocations
+                    )
+                )
             )
-        )))
+        )
     }
 }
 

@@ -1,5 +1,5 @@
-import Testing
 import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 private typealias Diff = Sequence_Difference_Primitives.Sequence.Difference

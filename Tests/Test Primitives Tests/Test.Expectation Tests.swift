@@ -1,6 +1,6 @@
-import Testing
-import Test_Primitives_Test_Support
 import Foundation
+import Test_Primitives_Test_Support
+import Testing
 
 private typealias SUT = Test_Primitives.Test
 
@@ -16,10 +16,14 @@ extension TestExpectationTests.Unit {
     @Test
     func `passing expectation`() {
         let expr = SUT.Expression(
-            id: 1, sourceCode: "x == 42", sourceLocation: .stub()
+            id: 1,
+            sourceCode: "x == 42",
+            sourceLocation: .stub()
         )
         let expectation = SUT.Expectation(
-            id: 1, expression: expr, isPassing: true
+            id: 1,
+            expression: expr,
+            isPassing: true
         )
         #expect(expectation.isPassing)
         #expect(!expectation.isFailing)
@@ -29,13 +33,18 @@ extension TestExpectationTests.Unit {
     @Test
     func `failing expectation with failure`() {
         let expr = SUT.Expression(
-            id: 1, sourceCode: "x == 42", sourceLocation: .stub()
+            id: 1,
+            sourceCode: "x == 42",
+            sourceLocation: .stub()
         )
         let failure = SUT.Expectation.Failure(
             message: "Expected 42, got 0"
         )
         let expectation = SUT.Expectation(
-            id: 2, expression: expr, isPassing: false, failure: failure
+            id: 2,
+            expression: expr,
+            isPassing: false,
+            failure: failure
         )
         #expect(!expectation.isPassing)
         #expect(expectation.isFailing)
