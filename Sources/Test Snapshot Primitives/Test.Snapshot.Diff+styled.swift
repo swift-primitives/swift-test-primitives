@@ -49,6 +49,14 @@ extension Test.Snapshot.Diff {
 
                 segments.append(.init("\(line.marker)\(line.element)", style: style))
 
+                // reason: Separator-not-last boundary on stdlib `[Hunk.Line]` iteration.
+                // No typed Cardinal surface available at this site; the assertion
+                // "lineIndex is not the last index" is naturally written as the
+                // strict inequality against the last valid index (which is the
+                // length-minus-one position). Algebraic-flip rephrase obscures
+                // the math; restructuring via `enumerated() + offset > 0` inverts
+                // the question (not-first vs not-last) which is a different intent.
+                // swiftlint:disable:next cardinal_count_minus_one_anti_pattern
                 if lineIndex < hunk.lines.count - 1 {
                     segments.append(.init("\n", style: .plain))
                 }

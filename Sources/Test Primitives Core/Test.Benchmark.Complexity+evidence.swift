@@ -127,8 +127,13 @@ extension Test.Benchmark.Complexity {
         do {
             let mean = seconds.reduce(0, +) / Double(seconds.count)
             if mean > 0 {
+                // reason: Bessel's correction — sample variance denominator n-1 is
+                // the canonical statistics formula; `seconds` is stdlib `[Double]`,
+                // no typed Cardinal surface available at this site. The math reads
+                // as math: n-1 IS the degrees-of-freedom expression.
                 let variance =
                     seconds.reduce(0.0) { $0 + ($1 - mean) * ($1 - mean) }
+                    // swiftlint:disable:next cardinal_count_minus_one_anti_pattern
                     / Double(seconds.count - 1)
                 metricCV = variance.squareRoot() / mean
             } else {

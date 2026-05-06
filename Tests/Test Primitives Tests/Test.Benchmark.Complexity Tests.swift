@@ -28,7 +28,7 @@ extension TestBenchmarkComplexityTests.Class {
             .constant, .logarithmic, .squareRoot, .linear,
             .linearithmic, .quadratic, .cubic, .exponential,
         ]
-        for i in 0..<(classes.count - 1) {
+        for i in classes.indices.dropLast() {
             #expect(classes[i] < classes[i + 1])
         }
     }
@@ -220,7 +220,7 @@ extension TestBenchmarkComplexityTests.Evidence {
             classes: [.constant, .logarithmic, .linear, .quadratic]
         )
 
-        for i in 0..<(evidence.candidates.count - 1) {
+        for i in evidence.candidates.indices.dropLast() {
             #expect(
                 evidence.candidates[i].regression.rSquared
                     >= evidence.candidates[i + 1].regression.rSquared
