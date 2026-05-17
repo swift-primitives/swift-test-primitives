@@ -77,7 +77,7 @@ extension TestSnapshotDiffTests.Unit {
         )
         let result = changes.hunks()
         #expect(!result.isEmpty)
-        #expect(result[0].patchMark.hasPrefix("@@"))
+        #expect(result[0].header.hasPrefix("@@"))
     }
 
     @Test

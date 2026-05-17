@@ -36,7 +36,7 @@ extension Test.Snapshot.Diff {
                 segments.append(.init("\n", style: .plain))
             }
 
-            segments.append(.init(hunk.patchMark, style: .secondary))
+            segments.append(.init(hunk.header, style: .secondary))
             segments.append(.init("\n", style: .plain))
 
             for (lineIndex, line) in hunk.lines.enumerated() {
