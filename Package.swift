@@ -38,6 +38,7 @@ let package = Package(
         .package(path: "../swift-numeric-primitives"),
         .package(path: "../swift-time-primitives"),
         .package(path: "../swift-witness-primitives"),
+        .package(path: "../swift-byte-primitives"),
     ],
     targets: [
         // MARK: - Core
@@ -49,6 +50,7 @@ let package = Package(
                 .product(name: "Sample Primitives", package: "swift-sample-primitives"),
                 .product(name: "Real Primitives", package: "swift-numeric-primitives"),
                 .product(name: "Time Primitives Core", package: "swift-time-primitives"),
+                .product(name: "Byte Primitives", package: "swift-byte-primitives"),
             ]
         ),
 
@@ -103,6 +105,7 @@ let package = Package(
             dependencies: [
                 "Test Primitives",
                 "Test Primitives Test Support",
+                .product(name: "Byte Primitives", package: "swift-byte-primitives"),
             ]
         ),
     ],

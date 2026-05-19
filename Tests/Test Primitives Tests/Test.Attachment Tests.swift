@@ -1,3 +1,4 @@
+import Byte_Primitives
 import Test_Primitives_Test_Support
 import Testing
 
@@ -11,7 +12,7 @@ struct TestAttachmentTests {
 extension TestAttachmentTests.Unit {
 
     @Test func `init from bytes stores name and bytes`() {
-        let attachment = SUT.Attachment(name: "diff.bin", bytes: [0x48, 0x49])
+        let attachment = SUT.Attachment(name: "diff.bin", bytes: [0x48, 0x49] as [Byte])
         #expect(attachment.name == "diff.bin")
         #expect(attachment.bytes == [0x48, 0x49])
     }
@@ -19,20 +20,20 @@ extension TestAttachmentTests.Unit {
     @Test func `init from bytes stores content type`() {
         let attachment = SUT.Attachment(
             name: "img.png",
-            bytes: [0x89, 0x50],
+            bytes: [0x89, 0x50] as [Byte],
             contentType: "image/png"
         )
         #expect(attachment.contentType == "image/png")
     }
 
     @Test func `init from bytes defaults content type to nil`() {
-        let attachment = SUT.Attachment(name: "data.bin", bytes: [])
+        let attachment = SUT.Attachment(name: "data.bin", bytes: [] as [Byte])
         #expect(attachment.contentType == nil)
     }
 
     @Test func `init from string encodes as UTF-8`() {
         let attachment = SUT.Attachment(name: "msg.txt", string: "hello")
-        #expect(attachment.bytes == Array("hello".utf8))
+        #expect(attachment.bytes == "hello".utf8.map(Byte.init))
     }
 
     @Test func `init from string sets text content type`() {

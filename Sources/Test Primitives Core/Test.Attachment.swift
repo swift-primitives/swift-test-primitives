@@ -5,6 +5,8 @@
 //  Test artifact attachment for CI visibility.
 //
 
+public import Byte_Primitives
+
 extension Test {
     /// A named data artifact produced during test execution.
     ///
@@ -23,7 +25,7 @@ extension Test {
         public let name: Swift.String
 
         /// Raw bytes of the attachment content.
-        public let bytes: [UInt8]
+        public let bytes: [Byte]
 
         /// Optional MIME type (e.g., "text/plain", "image/png").
         public let contentType: Swift.String?
@@ -36,11 +38,11 @@ extension Test {
         ///   - contentType: Optional MIME type.
         public init(
             name: Swift.String,
-            bytes: [UInt8],
+            bytes: some Swift.Sequence<some Byte.`Protocol`>,
             contentType: Swift.String? = nil
         ) {
             self.name = name
-            self.bytes = bytes
+            self.bytes = Swift.Array(bytes.lazy.map(\.byte))
             self.contentType = contentType
         }
 
@@ -51,7 +53,7 @@ extension Test {
         ///   - string: Text content (encoded as UTF-8).
         public init(name: Swift.String, string: Swift.String) {
             self.name = name
-            self.bytes = Array(string.utf8)
+            self.bytes = string.utf8.map(Byte.init)
             self.contentType = "text/plain"
         }
     }
