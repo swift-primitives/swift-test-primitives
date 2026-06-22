@@ -59,7 +59,7 @@ let package = Package(
             name: "Test Snapshot Primitives",
             dependencies: [
                 "Test Primitives Core",
-                .product(name: "Async Primitives Core", package: "swift-async-primitives"),
+                .product(name: "Async Primitives", package: "swift-async-primitives"),
                 .product(
                     name: "Sequence Difference Primitives",
                     package: "swift-sequence-primitives"
