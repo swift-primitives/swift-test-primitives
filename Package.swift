@@ -49,7 +49,7 @@ let package = Package(
                 .product(name: "Source Primitives", package: "swift-source-primitives"),
                 .product(name: "Sample Primitives", package: "swift-sample-primitives"),
                 .product(name: "Real Primitives", package: "swift-numeric-primitives"),
-                .product(name: "Time Primitives Core", package: "swift-time-primitives"),
+                .product(name: "Time Primitives", package: "swift-time-primitives"),
                 .product(name: "Byte Primitives", package: "swift-byte-primitives"),
             ]
         ),
