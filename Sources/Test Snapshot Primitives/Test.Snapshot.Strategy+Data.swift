@@ -5,9 +5,11 @@
 //  Built-in binary data strategy.
 //
 
+public import Byte_Primitives
+
 // MARK: - Data Diffing
 
-extension Test.Snapshot.Diffing where Format == [UInt8] {
+extension Test.Snapshot.Diffing where Format == [Byte] {
     /// Binary data comparison diffing.
     ///
     /// Compares byte arrays, reporting size differences and the
@@ -56,7 +58,7 @@ extension Test.Snapshot.Diffing where Format == [UInt8] {
 
 // MARK: - Data Strategy
 
-extension Test.Snapshot.Strategy where Value == [UInt8], Format == [UInt8] {
+extension Test.Snapshot.Strategy where Value == [Byte], Format == [Byte] {
     /// Binary data comparison strategy.
     ///
     /// Compares raw byte arrays. Best for binary files, images,

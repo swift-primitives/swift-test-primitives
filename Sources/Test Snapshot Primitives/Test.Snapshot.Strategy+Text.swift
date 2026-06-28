@@ -5,6 +5,9 @@
 //  Built-in text and lines strategies.
 //
 
+import Byte_Primitives
+import Byte_Primitives_Standard_Library_Integration
+
 // MARK: - String Diffing
 
 extension Test.Snapshot.Diffing where Format == String {
@@ -13,8 +16,8 @@ extension Test.Snapshot.Diffing where Format == String {
     /// Compares entire strings, reporting if they differ.
     public static var text: Self {
         Test.Snapshot.Diffing(
-            toBytes: { Array($0.utf8) },
-            fromBytes: { String(decoding: $0, as: UTF8.self) },
+            toBytes: { $0.utf8.map(Byte.init) },
+            fromBytes: { String(decoding: $0.underlying, as: UTF8.self) },
             diff: { old, new in
                 guard old != new else { return nil }
                 return Test.Snapshot.Diff.Result(summary: "Text content differs")
@@ -28,8 +31,8 @@ extension Test.Snapshot.Diffing where Format == String {
     /// exactly which lines were added, removed, or changed.
     public static var lines: Self {
         Test.Snapshot.Diffing(
-            toBytes: { Array($0.utf8) },
-            fromBytes: { String(decoding: $0, as: UTF8.self) },
+            toBytes: { $0.utf8.map(Byte.init) },
+            fromBytes: { String(decoding: $0.underlying, as: UTF8.self) },
             diff: { old, new in
                 guard old != new else { return nil }
 

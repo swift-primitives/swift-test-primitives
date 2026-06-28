@@ -6,6 +6,7 @@
 //
 
 public import Witness_Primitives
+public import Byte_Primitives
 
 extension Test.Snapshot {
     /// Encapsulates serialization and comparison for a format.
@@ -39,12 +40,12 @@ extension Test.Snapshot {
     /// ```
     public struct Diffing<Format>: Sendable, Witness.`Protocol` {
         /// Serializes format to bytes for disk storage.
-        public let toBytes: @Sendable (Format) -> [UInt8]
+        public let toBytes: @Sendable (Format) -> [Byte]
 
         /// Deserializes bytes back to format.
         ///
         /// Returns `nil` if deserialization fails.
-        public let fromBytes: @Sendable ([UInt8]) -> Format?
+        public let fromBytes: @Sendable ([Byte]) -> Format?
 
         /// Compares two format values.
         ///
@@ -58,8 +59,8 @@ extension Test.Snapshot {
         ///   - fromBytes: Deserializes bytes to format.
         ///   - diff: Compares two values, returning diff if different.
         public init(
-            toBytes: @escaping @Sendable (Format) -> [UInt8],
-            fromBytes: @escaping @Sendable ([UInt8]) -> Format?,
+            toBytes: @escaping @Sendable (Format) -> [Byte],
+            fromBytes: @escaping @Sendable ([Byte]) -> Format?,
             diff: @escaping @Sendable (Format, Format) -> Diff.Result?
         ) {
             self.toBytes = toBytes

@@ -65,6 +65,8 @@ let package = Package(
                     package: "swift-sequence-primitives"
                 ),
                 .product(name: "Witness Primitives", package: "swift-witness-primitives"),
+                .product(name: "Byte Primitives", package: "swift-byte-primitives"),
+                .product(name: "Byte Primitives Standard Library Integration", package: "swift-byte-primitives"),
             ]
         ),
 
