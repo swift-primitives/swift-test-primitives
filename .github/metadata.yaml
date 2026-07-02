@@ -1,6 +1,6 @@
 # .github/metadata.yaml
 # Triaged by AI-assisted bulk pass (2026-04-29).
-description: "Test types for Swift."
+description: "Test-run, benchmark-complexity/trend, and snapshot diff/redaction vocabulary types for Swift."
 topics:
   - primitives
   - test
