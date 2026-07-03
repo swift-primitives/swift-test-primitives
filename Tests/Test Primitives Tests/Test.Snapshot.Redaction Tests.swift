@@ -1,3 +1,4 @@
+import Byte_Primitives
 import Test_Primitives_Test_Support
 import Testing
 
@@ -22,7 +23,7 @@ extension TestSnapshotRedactionTests.Unit {
     }
 
     @Test func `redaction transforms non-string format`() {
-        let redaction = SUT.Snapshot.Redaction<[UInt8]>(apply: { $0.map { $0 &+ 1 } })
+        let redaction = SUT.Snapshot.Redaction<[Byte]>(apply: { $0.map { Byte($0.underlying &+ 1) } })
         #expect(redaction.apply([0, 1, 2]) == [1, 2, 3])
     }
 

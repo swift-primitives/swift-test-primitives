@@ -1,3 +1,4 @@
+import Byte_Primitives
 import Test_Primitives_Test_Support
 import Testing
 
@@ -62,8 +63,8 @@ extension TestSnapshotDiffingTests.Unit {
 
     @Test
     func `data diffing round-trips through bytes`() {
-        let diffing = SUT.Snapshot.Diffing<[UInt8]>.data
-        let original: [UInt8] = [0x01, 0x02, 0x03]
+        let diffing = SUT.Snapshot.Diffing<[Byte]>.data
+        let original: [Byte] = [0x01, 0x02, 0x03]
         let bytes = diffing.toBytes(original)
         let restored = diffing.fromBytes(bytes)
         #expect(restored == original)
@@ -71,15 +72,15 @@ extension TestSnapshotDiffingTests.Unit {
 
     @Test
     func `data diffing detects identical data as equal`() {
-        let diffing = SUT.Snapshot.Diffing<[UInt8]>.data
-        let data: [UInt8] = [1, 2, 3]
+        let diffing = SUT.Snapshot.Diffing<[Byte]>.data
+        let data: [Byte] = [1, 2, 3]
         let result = diffing.diff(data, data)
         #expect(result == nil)
     }
 
     @Test
     func `data diffing detects different data`() {
-        let diffing = SUT.Snapshot.Diffing<[UInt8]>.data
+        let diffing = SUT.Snapshot.Diffing<[Byte]>.data
         let result = diffing.diff([1, 2, 3], [1, 4, 3])
         #expect(result != nil)
     }
@@ -98,7 +99,7 @@ extension TestSnapshotDiffingTests.EdgeCase {
 
     @Test
     func `data diffing empty arrays are equal`() {
-        let diffing = SUT.Snapshot.Diffing<[UInt8]>.data
+        let diffing = SUT.Snapshot.Diffing<[Byte]>.data
         let result = diffing.diff([], [])
         #expect(result == nil)
     }

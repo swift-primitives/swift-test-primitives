@@ -1,3 +1,4 @@
+import Byte_Primitives
 import Test_Primitives_Test_Support
 import Testing
 
@@ -69,7 +70,7 @@ extension TestSnapshotStrategyTests.Unit {
 
     @Test
     func `data strategy has bin extension`() {
-        let strategy = SUT.Snapshot.Strategy<[UInt8], [UInt8]>.data
+        let strategy = SUT.Snapshot.Strategy<[Byte], [Byte]>.data
         #expect(strategy.pathExtension == "bin")
         #expect(strategy.isSynchronous)
     }
