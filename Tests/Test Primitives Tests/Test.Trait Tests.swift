@@ -1,5 +1,3 @@
-// reason: Codable round-trip assertions below need JSONEncoder/JSONDecoder (test-only).
-// swiftlint:disable:next no_foundation_import_warning
 import Foundation
 import Test_Primitives_Test_Support
 import Testing
