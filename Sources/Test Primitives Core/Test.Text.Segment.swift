@@ -81,6 +81,7 @@ extension Test.Text.Segment {
 // MARK: - CustomStringConvertible
 
 extension Test.Text.Segment: CustomStringConvertible {
+    /// The segment's plain-text content, with styling discarded.
     public var description: String {
         content
     }

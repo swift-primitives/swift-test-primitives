@@ -24,14 +24,15 @@ extension Test.Benchmark.Complexity.Candidate {
         ///
         /// Computed by log-log regression of the class's predictor transform
         /// values against input sizes. For pure power laws, this equals the
-        /// theoretical exponent (e.g., 2.0 for quadratic). For non-power-law
+        /// theoretical exponent (for example, 2.0 for quadratic). For non-power-law
         /// classes, this gives the empirical exponent over the measured range
-        /// (e.g., ≈1.05–1.15 for linearithmic over typical benchmark ranges).
+        /// (for example, ≈1.05–1.15 for linearithmic over typical benchmark ranges).
         ///
         /// Used for cross-validation: if the observed continuous exponent
         /// diverges from this value, the classification may be unreliable.
         public let effectiveExponent: Double
 
+        /// Creates a candidate fit from its class, regression, and effective exponent.
         public init(
             complexity: Test.Benchmark.Complexity.Class,
             regression: Sample.Regression.Fit,

@@ -20,7 +20,7 @@ extension [(Bool?, Bool?)] {
 /// All combinations of three optional boolean values.
 extension [(Bool?, Bool?, Bool?)] {
     /// All 27 combinations of three three-valued booleans.
-    public static let allCases: Self = [(Bool?, Bool?)].allCases.flatMap { (first, second) in
+    public static let allCases: Self = [(Bool?, Bool?)].allCases.flatMap { first, second in
         Bool?.allCases.map { third in (first, second, third) }
     }
 }

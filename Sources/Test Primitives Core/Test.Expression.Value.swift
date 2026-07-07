@@ -19,7 +19,7 @@ extension Test.Expression {
     /// - `stringValue`: `"25"`
     /// - `typeDescription`: `"Int"`
     public struct Value: Sendable, Hashable, Codable {
-        /// The label identifying this value (e.g., subexpression text).
+        /// The label identifying this value (for example, subexpression text).
         public let label: String?
 
         /// A string representation of the value (via String(describing:)).
@@ -61,6 +61,10 @@ extension Test.Expression {
             self.typeDescription = String(describing: type(of: value))
 
             // Check for nil in optionals
+            // reason: `T` is fully unconstrained here — detecting whether an arbitrary
+            // captured value is an Optional requires a runtime existential cast; there
+            // is no generic-constraint form that expresses "is this type Optional".
+            // swiftlint:disable:next no_any_protocol_existential
             if let optional = value as? any OptionalProtocol {
                 self.isNil = optional._isNil
             } else {
@@ -86,11 +90,9 @@ extension Optional: OptionalProtocol {
 // MARK: - CustomStringConvertible
 
 extension Test.Expression.Value: CustomStringConvertible {
+    /// A human-readable rendering: `"label = value"` when labeled, else just the value.
     public var description: String {
-        if let label {
-            return "\(label) = \(stringValue)"
-        } else {
-            return stringValue
-        }
+        guard let label else { return stringValue }
+        return "\(label) = \(stringValue)"
     }
 }

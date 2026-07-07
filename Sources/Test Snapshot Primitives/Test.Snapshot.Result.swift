@@ -56,9 +56,11 @@ extension Test.Snapshot.Result {
         switch self {
         case .matched:
             return true
+
         case .recorded:
             // Recording is typically considered passing (new snapshot created)
             return true
+
         case .failed, .missingReference, .recordedInline:
             return false
         }
@@ -79,16 +81,21 @@ extension Test.Snapshot.Result: Hashable {}
 // MARK: - CustomStringConvertible
 
 extension Test.Snapshot.Result: CustomStringConvertible {
+    /// A human-readable summary of the outcome, including any associated paths or diffs.
     public var description: String {
         switch self {
         case .matched:
             return "Snapshot matched"
+
         case .recorded(let path):
             return "Snapshot recorded at: \(path)"
+
         case .failed(let diff, let referencePath):
             return "Snapshot mismatch (reference: \(referencePath)): \(diff.summary)"
+
         case .missingReference(let path):
             return "Missing reference snapshot at: \(path)"
+
         case .recordedInline(let sourceFile):
             return "Inline snapshot recorded in: \(sourceFile). Re-run to assert."
         }

@@ -14,7 +14,7 @@ extension Test.Benchmark.Complexity {
     /// measurements at multiple input sizes, log-log regression fits
     /// log₂(T) = k·log₂(n) + log₂(c), yielding:
     ///
-    /// - ``value``: the effective exponent k (e.g., k ≈ 1.0 for O(n), k ≈ 2.0 for O(n²))
+    /// - ``value``: the effective exponent k (for example, k ≈ 1.0 for O(n), k ≈ 2.0 for O(n²))
     /// - ``coefficient``: the scale factor c in T ≈ c·nᵏ
     /// - ``fit``: the underlying regression fit with R² and MSE
     ///
@@ -37,6 +37,7 @@ extension Test.Benchmark.Complexity {
         /// The underlying log-log regression fit.
         public let fit: Sample.Regression.Fit
 
+        /// Creates an exponent summary from its regression-derived components.
         public init(
             value: Double,
             coefficient: Double,

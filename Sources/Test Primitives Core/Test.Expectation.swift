@@ -82,11 +82,12 @@ extension Test.Expectation {
 // MARK: - CustomStringConvertible
 
 extension Test.Expectation: CustomStringConvertible {
+    /// A human-readable rendering: a checkmark with the source, or a failure message.
+    ///
+    /// Keys off `failure` rather than `isPassing` — the initializer's preconditions
+    /// guarantee `isPassing == (failure == nil)`, so this avoids a force unwrap.
     public var description: String {
-        if isPassing {
-            return "✓ \(expression.sourceCode)"
-        } else {
-            return "✗ \(expression.sourceCode): \(failure!.message)"
-        }
+        guard let failure else { return "✓ \(expression.sourceCode)" }
+        return "✗ \(expression.sourceCode): \(failure.message)"
     }
 }

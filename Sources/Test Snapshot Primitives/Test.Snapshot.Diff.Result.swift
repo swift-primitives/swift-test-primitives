@@ -39,7 +39,7 @@ extension Test.Snapshot.Diff {
         /// Structural operations describing individual changes.
         ///
         /// Present when the diffing strategy produces semantic, tree-aware
-        /// comparisons (e.g., structural JSON diff). `nil` for line-based diffs.
+        /// comparisons (for example, structural JSON diff). `nil` for line-based diffs.
         public let structuralOperations: [Operation]?
 
         /// Creates a diff result.
@@ -63,6 +63,7 @@ extension Test.Snapshot.Diff {
 // MARK: - CustomStringConvertible
 
 extension Test.Snapshot.Diff.Result: CustomStringConvertible {
+    /// The summary, followed by the unified diff text when present.
     public var description: String {
         if let diff = unifiedDiff {
             return "\(summary)\n\(diff.plainText)"

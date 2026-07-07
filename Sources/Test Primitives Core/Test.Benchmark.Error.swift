@@ -21,6 +21,7 @@ extension Test.Benchmark {
             tolerance: Double
         )
 
+        /// A human-readable failure message, one rendering per error case.
         public var description: Swift.String {
             switch self {
             case .thresholdExceeded(let test, let metric, let expected, let actual):

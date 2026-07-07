@@ -62,8 +62,8 @@ extension Test {
 
         /// Extensible payload for higher-layer event kinds.
         ///
-        /// L1 known kinds use typed properties (result, expectation, etc.).
-        /// L3 extensible kinds carry serialized data (e.g. JSON) in payload.
+        /// L1 known kinds use typed properties (result, expectation, and so on).
+        /// L3 extensible kinds carry serialized data (for example, JSON) in payload.
         /// The kind is first-class via Tagged — payload is additional data,
         /// not a kind identifier.
         public let payload: Swift.String?
@@ -110,6 +110,7 @@ extension Test {
 // MARK: - CustomStringConvertible
 
 extension Test.Event: CustomStringConvertible {
+    /// A human-readable summary assembled from the event's present fields.
     public var description: String {
         var parts: [String] = []
 

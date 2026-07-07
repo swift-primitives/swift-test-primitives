@@ -63,6 +63,7 @@ extension Test {
 // MARK: - CustomStringConvertible
 
 extension Test.Issue: CustomStringConvertible {
+    /// A human-readable summary, including the source location when present.
     public var description: String {
         var result = kind.description
 

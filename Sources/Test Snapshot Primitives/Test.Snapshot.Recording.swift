@@ -68,5 +68,6 @@ extension Test.Snapshot {
 // MARK: - CustomStringConvertible
 
 extension Test.Snapshot.Recording: CustomStringConvertible {
+    /// The raw recording-mode string.
     public var description: String { rawValue }
 }

@@ -10,7 +10,7 @@ extension Test {
     ///
     /// `Text` provides rich, structured descriptions for test output.
     /// Unlike plain strings, it preserves semantic information about
-    /// different parts of the text (identifiers, values, punctuation, etc.).
+    /// different parts of the text (identifiers, values, punctuation, and so on).
     ///
     /// ## Example
     ///
@@ -62,6 +62,7 @@ extension Test {
 // MARK: - ExpressibleByStringLiteral
 
 extension Test.Text: ExpressibleByStringLiteral {
+    /// Creates plain (unstyled) text from a string literal.
     public init(stringLiteral value: String) {
         self.init(value)
     }
@@ -70,7 +71,14 @@ extension Test.Text: ExpressibleByStringLiteral {
 // MARK: - ExpressibleByStringInterpolation
 
 extension Test.Text: ExpressibleByStringInterpolation {
+    /// Creates plain (unstyled) text from a string interpolation.
     public init(stringInterpolation: DefaultStringInterpolation) {
+        // reason: this IS the bridge — implementing our own
+        // ExpressibleByStringInterpolation requires converting the compiler-built
+        // `DefaultStringInterpolation` into a `String`, and `String.init(stringInterpolation:)`
+        // is the only vocabulary for that; the rule's target (bypassing string-literal
+        // syntax) does not apply to a protocol's own conformance implementation.
+        // swiftlint:disable:next compiler_protocol_init
         self.init(String(stringInterpolation: stringInterpolation))
     }
 }
@@ -78,6 +86,7 @@ extension Test.Text: ExpressibleByStringInterpolation {
 // MARK: - ExpressibleByArrayLiteral
 
 extension Test.Text: ExpressibleByArrayLiteral {
+    /// Creates text from a literal array of styled segments.
     public init(arrayLiteral elements: Segment...) {
         self.init(elements)
     }
@@ -86,6 +95,7 @@ extension Test.Text: ExpressibleByArrayLiteral {
 // MARK: - CustomStringConvertible
 
 extension Test.Text: CustomStringConvertible {
+    /// The plain-text rendering, with all styling discarded.
     public var description: String {
         plainText
     }

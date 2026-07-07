@@ -5,8 +5,8 @@
 //  Serialization and comparison logic.
 //
 
-public import Witness_Primitives
 public import Byte_Primitives
+public import Witness_Primitives
 
 extension Test.Snapshot {
     /// Encapsulates serialization and comparison for a format.

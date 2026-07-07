@@ -8,7 +8,7 @@
 extension Test {
     /// A parameterized test case.
     ///
-    /// When a test is parameterized (e.g., `@Test(arguments: [1, 2, 3])`),
+    /// When a test is parameterized (for example, `@Test(arguments: [1, 2, 3])`),
     /// each argument combination creates a separate `Case`.
     ///
     /// ## Example
@@ -18,7 +18,7 @@ extension Test {
     /// func testSquare(value: Int) {
     ///     #expect(value * value > 0)
     /// }
-    /// // Creates 3 cases: Case(id: 0, arguments: "1"), etc.
+    /// // Creates 3 cases: Case(id: 0, arguments: "1"), and so on.
     /// ```
     public struct Case: Sendable, Hashable, Codable {
         /// Unique runtime identifier for this case.
@@ -52,6 +52,7 @@ extension Test.Case {
 // MARK: - CustomStringConvertible
 
 extension Test.Case: CustomStringConvertible {
+    /// A human-readable rendering of the case's argument combination.
     public var description: String {
         "Case(\(arguments))"
     }

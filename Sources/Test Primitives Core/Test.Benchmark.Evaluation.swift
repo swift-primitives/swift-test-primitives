@@ -25,7 +25,7 @@ extension Test.Benchmark {
         ///
         /// When set, the scope provider loads a stored baseline measurement,
         /// compares the current result, and fails if the regression exceeds
-        /// this fraction (e.g. `0.10` = 10% tolerance).
+        /// this fraction (for example, `0.10` = 10% tolerance).
         public var baselineTolerance: Double?
 
         /// Whether to track memory allocations per iteration.
@@ -42,7 +42,7 @@ extension Test.Benchmark {
         /// - Parameters:
         ///   - threshold: Optional performance budget.
         ///   - metric: Metric to check against threshold (default: .median).
-        ///   - baselineTolerance: Optional regression tolerance (e.g. `0.10` = 10%).
+        ///   - baselineTolerance: Optional regression tolerance (for example, `0.10` = 10%).
         ///   - trackAllocations: Whether to track memory allocations per iteration.
         ///   - printResults: Whether to print results to console.
         public init(

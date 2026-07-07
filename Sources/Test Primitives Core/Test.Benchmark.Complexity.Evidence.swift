@@ -41,7 +41,7 @@ extension Test.Benchmark.Complexity {
         /// Measured data points: input size and representative duration.
         ///
         /// Sorted by size in ascending order. The duration is the metric
-        /// extracted from per-size-point measurements (e.g., median).
+        /// extracted from per-size-point measurements (for example, median).
         public let points: [(size: Int, metric: Duration)]
 
         /// Coefficient of variation of the metric values across size points.
@@ -55,6 +55,7 @@ extension Test.Benchmark.Complexity {
         /// Returns `.infinity` when fewer than 2 valid points exist.
         public let metricCV: Double
 
+        /// Creates a complexity evidence bundle from its measured and derived components.
         public init(
             exponent: Exponent,
             candidates: [Candidate.Fit],

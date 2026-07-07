@@ -39,7 +39,7 @@ extension Test.Snapshot {
     ///
     /// ## Async Strategies
     ///
-    /// For values requiring async capture (rendering, network, etc.):
+    /// For values requiring async capture (rendering, network, and so on):
     ///
     /// ```swift
     /// extension Test.Snapshot.Strategy where Value == WebView, Format == String {
@@ -61,7 +61,7 @@ extension Test.Snapshot {
     /// }
     /// ```
     public struct Strategy<Value, Format>: Witness.`Protocol` where Format: Sendable {
-        /// File extension for snapshot files (e.g., "txt", "json", "png").
+        /// File extension for snapshot files (for example, "txt", "json", "png").
         ///
         /// Set to `nil` to use no extension.
         public var pathExtension: String?

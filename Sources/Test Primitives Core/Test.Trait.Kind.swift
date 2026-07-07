@@ -34,6 +34,7 @@ extension Test.Trait {
 // MARK: - CustomStringConvertible
 
 extension Test.Trait.Kind: CustomStringConvertible {
+    /// A source-like rendering of the trait, one case per variant.
     public var description: String {
         switch self {
         case .timeLimit(let duration):
@@ -52,11 +53,8 @@ extension Test.Trait.Kind: CustomStringConvertible {
             }
 
         case .bug(let id, let comment):
-            if let comment {
-                return ".bug(\"\(id)\", \"\(comment.plainText)\")"
-            } else {
-                return ".bug(\"\(id)\")"
-            }
+            guard let comment else { return ".bug(\"\(id)\")" }
+            return ".bug(\"\(id)\", \"\(comment.plainText)\")"
 
         case .serialized:
             return ".serialized"

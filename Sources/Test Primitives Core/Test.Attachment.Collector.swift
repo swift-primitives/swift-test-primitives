@@ -41,6 +41,7 @@ extension Test.Attachment {
     public final class Collector: @unsafe @unchecked Sendable {
         private let _storage = Mutex<[Test.Attachment]>([])
 
+        /// Creates an empty collector.
         public init() {}
 
         /// Records an attachment.

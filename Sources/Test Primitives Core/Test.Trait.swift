@@ -109,7 +109,7 @@ extension Test.Trait {
     ///   - warmup: Number of untimed warmup runs (default: 0).
     ///   - threshold: Optional performance budget.
     ///   - metric: Metric to check against threshold (default: .median).
-    ///   - baselineTolerance: Optional regression tolerance (e.g. `0.10` = 10%).
+    ///   - baselineTolerance: Optional regression tolerance (for example, `0.10` = 10%).
     ///   - trackAllocations: Whether to track memory allocations per iteration.
     /// - Returns: A timed trait.
     public static func timed(
@@ -139,6 +139,7 @@ extension Test.Trait {
 // MARK: - CustomStringConvertible
 
 extension Test.Trait: CustomStringConvertible {
+    /// A human-readable rendering delegated to the underlying trait kind.
     public var description: String {
         kind.description
     }

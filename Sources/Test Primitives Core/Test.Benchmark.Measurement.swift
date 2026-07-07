@@ -117,17 +117,27 @@ extension Test.Benchmark.Measurement: Codable {
         case durations
     }
 
+    // reason: signature forced by external protocol Swift.Encodable —
+    // encode(to:) requires untyped throws and an existential encoder.
+    // swiftlint:disable no_any_protocol_existential typed_throws_required
+    /// Encodes the raw durations this measurement was built from.
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(durations, forKey: .durations)
     }
+    // swiftlint:enable no_any_protocol_existential typed_throws_required
 
+    // reason: signature forced by external protocol Swift.Decodable —
+    // init(from:) requires untyped throws and an existential decoder.
+    // swiftlint:disable no_any_protocol_existential typed_throws_required
+    /// Decodes a measurement, rebuilding the derived batch from the raw durations.
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let durations = try container.decode([Duration].self, forKey: .durations)
         self.durations = durations
         self.batch = Sample.Batch(durations)
     }
+    // swiftlint:enable no_any_protocol_existential typed_throws_required
 }
 
 // MARK: - Comparable

@@ -15,7 +15,7 @@ extension Test.Benchmark {
     /// 1. **Continuous estimation**: log-log regression yields an effective
     ///    exponent k where T ≈ c·nᵏ.
     /// 2. **Discrete validation**: per-class OLS regression validates named
-    ///    complexity classes (O(n), O(n²), etc.) against the data.
+    ///    complexity classes (O(n), O(n²), and so on) against the data.
     ///
     /// The types in this namespace are evidence-level primitives (pure math).
     /// Policy interpretation (confidence, compatibility) lives in the

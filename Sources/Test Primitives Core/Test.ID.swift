@@ -39,7 +39,7 @@ extension Test {
         /// The suite name, if any.
         ///
         /// For nested suites, this may contain dot-separated names
-        /// (e.g., "OuterSuite.InnerSuite").
+        /// (for example, "OuterSuite.InnerSuite").
         public let suite: String?
 
         /// The test function name.
@@ -71,11 +71,8 @@ extension Test {
         ///
         /// Format: `Module.Suite.name` or `Module.name` if no suite.
         public var fullyQualifiedName: String {
-            if let suite {
-                return "\(module).\(suite).\(name)"
-            } else {
-                return "\(module).\(name)"
-            }
+            guard let suite else { return "\(module).\(name)" }
+            return "\(module).\(suite).\(name)"
         }
     }
 }
@@ -103,6 +100,7 @@ extension Test.ID: Comparable {
 // MARK: - CustomStringConvertible
 
 extension Test.ID: CustomStringConvertible {
+    /// The fully qualified name, delegated to ``fullyQualifiedName``.
     public var description: String {
         fullyQualifiedName
     }

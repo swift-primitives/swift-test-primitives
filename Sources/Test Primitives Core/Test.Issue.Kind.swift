@@ -40,6 +40,7 @@ extension Test.Issue {
 // MARK: - CustomStringConvertible
 
 extension Test.Issue.Kind: CustomStringConvertible {
+    /// A human-readable summary of the issue, one message per variant.
     public var description: String {
         switch self {
         case .unconditional(let message):

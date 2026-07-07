@@ -68,6 +68,7 @@ extension Test.Expectation {
 // MARK: - CustomStringConvertible
 
 extension Test.Expectation.Failure: CustomStringConvertible {
+    /// A human-readable failure message, including expected/actual values when present.
     public var description: String {
         var result = message.plainText
 

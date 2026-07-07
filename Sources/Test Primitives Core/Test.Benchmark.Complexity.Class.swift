@@ -92,6 +92,7 @@ extension Test.Benchmark.Complexity {
             }
         }
 
+        /// Orders complexity classes from constant through exponential.
         public static func < (lhs: Self, rhs: Self) -> Bool {
             lhs.order < rhs.order
         }

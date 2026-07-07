@@ -27,7 +27,7 @@ extension Test {
         /// Raw bytes of the attachment content.
         public let bytes: [Byte]
 
-        /// Optional MIME type (e.g., "text/plain", "image/png").
+        /// Optional MIME type (for example, "text/plain", "image/png").
         public let contentType: Swift.String?
 
         /// Creates an attachment from raw bytes.

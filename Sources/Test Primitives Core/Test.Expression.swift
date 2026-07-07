@@ -68,6 +68,7 @@ extension Test.Expression {
 // MARK: - CustomStringConvertible
 
 extension Test.Expression: CustomStringConvertible {
+    /// The original source code text of the expression.
     public var description: String {
         sourceCode
     }
