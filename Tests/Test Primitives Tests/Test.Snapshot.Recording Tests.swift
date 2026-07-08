@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Snapshot.Recording")
-struct TestSnapshotRecordingTests {
+@Suite
+struct `Test.Snapshot.Recording` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestSnapshotRecordingTests.Unit {
+extension `Test.Snapshot.Recording`.Unit {
     @Test
     func `allCases has four modes`() {
         #expect(SUT.Snapshot.Recording.allCases.count == 4)
@@ -36,7 +36,7 @@ extension TestSnapshotRecordingTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestSnapshotRecordingTests.EdgeCase {
+extension `Test.Snapshot.Recording`.`Edge Case` {
     @Test
     func `codable round-trip for all cases`() throws {
         for original in SUT.Snapshot.Recording.allCases {

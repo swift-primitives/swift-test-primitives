@@ -6,15 +6,15 @@ private typealias SUT = Test_Primitives.Test
 
 // Strategy<Value, Format> is generic — use parallel namespace [TEST-004]
 
-@Suite("Test.Snapshot.Strategy")
-struct TestSnapshotStrategyTests {
+@Suite
+struct `Test.Snapshot.Strategy` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestSnapshotStrategyTests.Unit {
+extension `Test.Snapshot.Strategy`.Unit {
     @Test
     func `sync strategy is synchronous`() {
         let strategy = SUT.Snapshot.Strategy<String, String>(
@@ -99,7 +99,7 @@ extension TestSnapshotStrategyTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestSnapshotStrategyTests.EdgeCase {
+extension `Test.Snapshot.Strategy`.`Edge Case` {
     @Test
     func `pullback chain composes`() {
         let strategy = SUT.Snapshot.Strategy<String, String>.text

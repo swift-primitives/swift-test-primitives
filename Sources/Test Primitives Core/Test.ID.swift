@@ -66,14 +66,16 @@ extension Test {
             self.name = name
             self.sourceLocation = sourceLocation
         }
+    }
+}
 
-        /// The fully qualified name of this test.
-        ///
-        /// Format: `Module.Suite.name` or `Module.name` if no suite.
-        public var fullyQualifiedName: String {
-            guard let suite else { return "\(module).\(name)" }
-            return "\(module).\(suite).\(name)"
-        }
+extension Test.ID {
+    /// The fully qualified name of this test.
+    ///
+    /// Format: `Module.Suite.name` or `Module.name` if no suite.
+    public var fullyQualifiedName: String {
+        guard let suite else { return "\(module).\(name)" }
+        return "\(module).\(suite).\(name)"
     }
 }
 

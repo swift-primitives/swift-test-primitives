@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.ID")
-struct TestIDTests {
+@Suite
+struct `Test.ID` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestIDTests.Unit {
+extension `Test.ID`.Unit {
     @Test
     func `init with suite stores all properties`() {
         let location = Source.Location.stub()
@@ -56,7 +56,7 @@ extension TestIDTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestIDTests.EdgeCase {
+extension `Test.ID`.`Edge Case` {
     @Test
     func `codable round-trip`() throws {
         let original = SUT.ID(

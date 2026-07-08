@@ -43,31 +43,33 @@ extension Test.Attachment {
 
         /// Creates an empty collector.
         public init() {}
-
-        /// Records an attachment.
-        ///
-        /// - Parameter attachment: The attachment to record.
-        public func record(_ attachment: Test.Attachment) {
-            _storage.withLock { $0.append(attachment) }
-        }
-
-        /// Drains all accumulated attachments, clearing storage.
-        ///
-        /// - Returns: All attachments recorded since the last drain.
-        public func drain() -> [Test.Attachment] {
-            _storage.withLock {
-                let result = $0
-                $0 = []
-                return result
-            }
-        }
-
-        /// Whether any attachments have been recorded.
-        public var isEmpty: Bool {
-            _storage.withLock { $0.isEmpty }
-        }
     }
 
     /// Global attachment collector.
     public static let collector = Collector()
+}
+
+extension Test.Attachment.Collector {
+    /// Records an attachment.
+    ///
+    /// - Parameter attachment: The attachment to record.
+    public func record(_ attachment: Test.Attachment) {
+        _storage.withLock { $0.append(attachment) }
+    }
+
+    /// Drains all accumulated attachments, clearing storage.
+    ///
+    /// - Returns: All attachments recorded since the last drain.
+    public func drain() -> [Test.Attachment] {
+        _storage.withLock {
+            let result = $0
+            $0 = []
+            return result
+        }
+    }
+
+    /// Whether any attachments have been recorded.
+    public var isEmpty: Bool {
+        _storage.withLock { $0.isEmpty }
+    }
 }

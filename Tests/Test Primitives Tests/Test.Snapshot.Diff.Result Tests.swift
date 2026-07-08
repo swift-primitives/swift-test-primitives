@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Snapshot.Diff.Result")
-struct TestSnapshotDiffResultTests {
+@Suite
+struct `Test.Snapshot.Diff.Result` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestSnapshotDiffResultTests.Unit {
+extension `Test.Snapshot.Diff.Result`.Unit {
     @Test
     func `init with summary only`() {
         let result = SUT.Snapshot.Diff.Result(summary: "3 lines differ")
@@ -43,7 +43,7 @@ extension TestSnapshotDiffResultTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestSnapshotDiffResultTests.EdgeCase {
+extension `Test.Snapshot.Diff.Result`.`Edge Case` {
     @Test
     func `codable round-trip`() throws {
         let diff: SUT.Text = [

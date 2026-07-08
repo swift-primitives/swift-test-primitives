@@ -61,11 +61,13 @@ extension Test {
             self.isPassing = isPassing
             self.failure = failure
         }
+    }
+}
 
-        /// Whether the expectation failed.
-        public var isFailing: Bool {
-            !isPassing
-        }
+extension Test.Expectation {
+    /// Whether the expectation failed.
+    public var isFailing: Bool {
+        !isPassing
     }
 }
 

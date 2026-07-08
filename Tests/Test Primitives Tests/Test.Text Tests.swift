@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Text")
-struct TestTextTests {
+@Suite
+struct `Test.Text` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestTextTests.Unit {
+extension `Test.Text`.Unit {
     @Test
     func `init from string creates single plain segment`() {
         let text = SUT.Text("hello")
@@ -75,7 +75,7 @@ extension TestTextTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestTextTests.EdgeCase {
+extension `Test.Text`.`Edge Case` {
     @Test
     func `empty text is empty`() {
         let text = SUT.Text("")

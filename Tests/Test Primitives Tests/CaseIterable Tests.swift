@@ -1,14 +1,14 @@
 import Test_Primitives_Test_Support
 import Testing
 
-@Suite("CaseIterable Extensions")
-struct CaseIterableTests {
+@Suite
+struct `CaseIterable Extensions` {
     @Suite struct Unit {}
 }
 
 // MARK: - Bool
 
-extension CaseIterableTests.Unit {
+extension `CaseIterable Extensions`.Unit {
     @Test
     func `Bool allCases has two elements`() {
         #expect(Bool.allCases.count == 2)
@@ -49,14 +49,14 @@ extension CaseIterableTests.Unit {
 
 // MARK: - Bool?
 
-extension CaseIterableTests {
-    @Suite("Bool?")
-    struct BoolOptional {
+extension `CaseIterable Extensions` {
+    @Suite
+    struct `Bool?` {
         @Suite struct Unit {}
     }
 }
 
-extension CaseIterableTests.BoolOptional.Unit {
+extension `CaseIterable Extensions`.`Bool?`.Unit {
     @Test
     func `Bool? allCases has three elements`() {
         let cases = Bool?.allCases

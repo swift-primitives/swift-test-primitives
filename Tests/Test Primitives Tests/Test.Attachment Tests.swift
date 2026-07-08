@@ -4,12 +4,12 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Attachment")
-struct TestAttachmentTests {
+@Suite
+struct `Test.Attachment` {
     @Suite struct Unit {}
 }
 
-extension TestAttachmentTests.Unit {
+extension `Test.Attachment`.Unit {
 
     @Test func `init from bytes stores name and bytes`() {
         let attachment = SUT.Attachment(name: "diff.bin", bytes: [0x48, 0x49] as [Byte])

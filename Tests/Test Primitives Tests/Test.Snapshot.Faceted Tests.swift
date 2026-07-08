@@ -3,12 +3,12 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Snapshot.Faceted")
-struct TestSnapshotFacetedTests {
+@Suite
+struct `Test.Snapshot.Faceted` {
     @Suite struct Unit {}
 }
 
-extension TestSnapshotFacetedTests.Unit {
+extension `Test.Snapshot.Faceted`.Unit {
 
     @Test func `init stores primary and facets`() {
         let primary = SUT.Snapshot.Strategy<String, String>.lines

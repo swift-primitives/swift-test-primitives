@@ -4,15 +4,15 @@ import Testing
 private typealias SUT = Test_Primitives.Test
 private typealias Diff = Sequence_Difference_Primitives.Sequence.Difference
 
-@Suite("Test.Snapshot.Diff")
-struct TestSnapshotDiffTests {
+@Suite
+struct `Test.Snapshot.Diff` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestSnapshotDiffTests.Unit {
+extension `Test.Snapshot.Diff`.Unit {
     @Test
     func `diff identical sequences returns all both`() {
         let result = Diff.diff(["a", "b", "c"], ["a", "b", "c"])
@@ -93,7 +93,7 @@ extension TestSnapshotDiffTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestSnapshotDiffTests.EdgeCase {
+extension `Test.Snapshot.Diff`.`Edge Case` {
     @Test
     func `diff empty sequences`() {
         let empty: [String] = []

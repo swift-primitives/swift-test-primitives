@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Expectation")
-struct TestExpectationTests {
+@Suite
+struct `Test.Expectation` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestExpectationTests.Unit {
+extension `Test.Expectation`.Unit {
     @Test
     func `passing expectation`() {
         let expr = SUT.Expression(
@@ -79,7 +79,7 @@ extension TestExpectationTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestExpectationTests.EdgeCase {
+extension `Test.Expectation`.`Edge Case` {
     @Test
     func `codable round-trip for passing`() throws {
         let original = SUT.Expectation(

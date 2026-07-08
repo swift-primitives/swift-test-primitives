@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Trait")
-struct TestTraitTests {
+@Suite
+struct `Test.Trait` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestTraitTests.Unit {
+extension `Test.Trait`.Unit {
     @Test
     func `timeLimit factory`() {
         let trait = SUT.Trait.timeLimit(.seconds(30))
@@ -94,7 +94,7 @@ extension TestTraitTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestTraitTests.EdgeCase {
+extension `Test.Trait`.`Edge Case` {
     @Test
     func `codable round-trip for tag`() throws {
         let original = SUT.Trait.tag("smoke")

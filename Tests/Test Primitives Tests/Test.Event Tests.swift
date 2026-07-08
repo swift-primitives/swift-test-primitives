@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Event")
-struct TestEventTests {
+@Suite
+struct `Test.Event` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestEventTests.Unit {
+extension `Test.Event`.Unit {
     @Test
     func `init with kind only`() {
         let event = SUT.Event(kind: .runStarted)
@@ -126,7 +126,7 @@ extension TestEventTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestEventTests.EdgeCase {
+extension `Test.Event`.`Edge Case` {
     @Test
     func `codable round-trip for simple kind`() throws {
         let original = SUT.Event(kind: .runStarted)

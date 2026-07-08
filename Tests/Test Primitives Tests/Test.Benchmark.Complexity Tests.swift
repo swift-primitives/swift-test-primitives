@@ -11,16 +11,16 @@ import Testing
 private typealias SUT = Test_Primitives.Test
 
 @Suite
-struct TestBenchmarkComplexityTests {
+struct `Test Benchmark Complexity Tests` {
 
     @Suite struct Class {}
     @Suite struct Evidence {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Class
 
-extension TestBenchmarkComplexityTests.Class {
+extension `Test Benchmark Complexity Tests`.Class {
 
     @Test
     func `comparable ordering matches growth rate`() {
@@ -68,7 +68,7 @@ extension TestBenchmarkComplexityTests.Class {
 
 // MARK: - Evidence (synthetic data)
 
-extension TestBenchmarkComplexityTests.Evidence {
+extension `Test Benchmark Complexity Tests`.Evidence {
 
     @Test
     func `linear data produces exponent near 1`() {
@@ -231,7 +231,7 @@ extension TestBenchmarkComplexityTests.Evidence {
 
 // MARK: - Edge Case
 
-extension TestBenchmarkComplexityTests.EdgeCase {
+extension `Test Benchmark Complexity Tests`.`Edge Case` {
 
     @Test
     func `single point returns degenerate evidence`() {

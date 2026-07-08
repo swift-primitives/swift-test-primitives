@@ -2,15 +2,15 @@ import Foundation
 import Test_Primitives_Test_Support
 import Testing
 
-@Suite("Source.Location")
-struct SourceLocationTests {
+@Suite
+struct `Source.Location` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension SourceLocationTests.Unit {
+extension `Source.Location`.Unit {
     @Test
     func `init stores all properties`() {
         let location = Source.Location(
@@ -55,7 +55,7 @@ extension SourceLocationTests.Unit {
 
 // MARK: - EdgeCase
 
-extension SourceLocationTests.EdgeCase {
+extension `Source.Location`.`Edge Case` {
     @Test
     func `comparison orders by fileID then line then column`() {
         let a = Source.Location(fileID: "A/F.swift", line: 1, column: 1)

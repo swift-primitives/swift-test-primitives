@@ -3,15 +3,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Snapshot.Result")
-struct TestSnapshotResultTests {
+@Suite
+struct `Test.Snapshot.Result` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestSnapshotResultTests.Unit {
+extension `Test.Snapshot.Result`.Unit {
     @Test
     func `matched is passing`() {
         let result = SUT.Snapshot.Result.matched
@@ -51,7 +51,7 @@ extension TestSnapshotResultTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestSnapshotResultTests.EdgeCase {
+extension `Test.Snapshot.Result`.`Edge Case` {
     @Test
     func `description is non-empty for all cases`() {
         let cases: [SUT.Snapshot.Result] = [

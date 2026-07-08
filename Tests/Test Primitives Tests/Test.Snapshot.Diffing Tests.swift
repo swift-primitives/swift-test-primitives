@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Snapshot.Diffing")
-struct TestSnapshotDiffingTests {
+@Suite
+struct `Test.Snapshot.Diffing` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestSnapshotDiffingTests.Unit {
+extension `Test.Snapshot.Diffing`.Unit {
     @Test
     func `text diffing round-trips through bytes`() {
         let diffing = SUT.Snapshot.Diffing<String>.text
@@ -88,7 +88,7 @@ extension TestSnapshotDiffingTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestSnapshotDiffingTests.EdgeCase {
+extension `Test.Snapshot.Diffing`.`Edge Case` {
     @Test
     func `lines diffing identical multiline strings are equal`() {
         let diffing = SUT.Snapshot.Diffing<String>.lines

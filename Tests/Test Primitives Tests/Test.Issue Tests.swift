@@ -4,15 +4,15 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Issue")
-struct TestIssueTests {
+@Suite
+struct `Test.Issue` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit
 
-extension TestIssueTests.Unit {
+extension `Test.Issue`.Unit {
     @Test
     func `init with kind only`() {
         let issue = SUT.Issue(kind: .unconditional("something wrong"))
@@ -86,7 +86,7 @@ extension TestIssueTests.Unit {
 
 // MARK: - EdgeCase
 
-extension TestIssueTests.EdgeCase {
+extension `Test.Issue`.`Edge Case` {
     @Test
     func `codable round-trip`() throws {
         let original = SUT.Issue(

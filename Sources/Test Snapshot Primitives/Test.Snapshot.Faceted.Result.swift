@@ -29,15 +29,17 @@ extension Test.Snapshot.Faceted {
             self.primary = primary
             self.facets = facets
         }
+    }
+}
 
-        /// Whether all components (primary and all facets) are passing.
-        public var isPassing: Bool {
-            primary.isPassing && facets.allSatisfy { $0.result.isPassing }
-        }
+extension Test.Snapshot.Faceted.Result {
+    /// Whether all components (primary and all facets) are passing.
+    public var isPassing: Bool {
+        primary.isPassing && facets.allSatisfy { $0.result.isPassing }
+    }
 
-        /// Whether any component (primary or any facet) is failing.
-        public var isFailing: Bool {
-            !isPassing
-        }
+    /// Whether any component (primary or any facet) is failing.
+    public var isFailing: Bool {
+        !isPassing
     }
 }

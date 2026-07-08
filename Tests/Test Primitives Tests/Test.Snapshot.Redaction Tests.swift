@@ -4,13 +4,13 @@ import Testing
 
 private typealias SUT = Test_Primitives.Test
 
-@Suite("Test.Snapshot.Redaction")
-struct TestSnapshotRedactionTests {
+@Suite
+struct `Test.Snapshot.Redaction` {
     @Suite struct Unit {}
     @Suite struct Integration {}
 }
 
-extension TestSnapshotRedactionTests.Unit {
+extension `Test.Snapshot.Redaction`.Unit {
 
     @Test func `apply closure transforms format`() {
         let redaction = SUT.Snapshot.Redaction<String>(apply: { $0.uppercased() })
@@ -79,7 +79,7 @@ extension TestSnapshotRedactionTests.Unit {
     }
 }
 
-extension TestSnapshotRedactionTests.Integration {
+extension `Test.Snapshot.Redaction`.Integration {
 
     @Test func `redacted strategy preserves path extension`() {
         let base = SUT.Snapshot.Strategy<String, String>(

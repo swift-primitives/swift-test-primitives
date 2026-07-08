@@ -46,16 +46,18 @@ extension Test {
         public init(_ string: String) {
             self.segments = [Segment(string, style: .plain)]
         }
+    }
+}
 
-        /// The plain text content without styling.
-        public var plainText: String {
-            segments.map(\.content).joined()
-        }
+extension Test.Text {
+    /// The plain text content without styling.
+    public var plainText: String {
+        segments.map(\.content).joined()
+    }
 
-        /// Whether this text is empty (no segments or all segments empty).
-        public var isEmpty: Bool {
-            segments.allSatisfy { $0.content.isEmpty }
-        }
+    /// Whether this text is empty (no segments or all segments empty).
+    public var isEmpty: Bool {
+        segments.allSatisfy { $0.content.isEmpty }
     }
 }
 
